@@ -22,7 +22,7 @@ public:
 	{
 		this->nume = "NoName";
 		this->stocare = 50;
-		this -> nrLimbajeFolosite = 0;
+		this->nrLimbajeFolosite = 0;
 		this->limbajeFolosite = NULL;
 	}
 
@@ -63,16 +63,16 @@ public:
 		}
 	}
 
-	Program operator=(const Program& p) 
+	Program operator=(const Program& p)
 	{
 		if (this != &p)
 		{
 			if (this->limbajeFolosite != NULL)
 				delete[]this->limbajeFolosite;
-				this->nume = p.nume;
-				this->stocare = p.stocare;
-				this->nrLimbajeFolosite = p.nrLimbajeFolosite;
-				this->limbajeFolosite = new string[p.nrLimbajeFolosite];
+			this->nume = p.nume;
+			this->stocare = p.stocare;
+			this->nrLimbajeFolosite = p.nrLimbajeFolosite;
+			this->limbajeFolosite = new string[p.nrLimbajeFolosite];
 			for (int i = 0; i < p.nrLimbajeFolosite; i++)
 				this->limbajeFolosite[i] = p.limbajeFolosite[i];
 		}
@@ -160,9 +160,71 @@ public:
 		Program::corporatie = corporatie;
 	}
 
-	friend float conversieGbToMb(Program p);
 
+	Program& operator++()
+	{                                      /*pre*/
+		this->stocare = this->stocare + 34;
+		return *this;
+	}
+
+	Program operator++(int )
+	{                                      /*post*/
+		Program aux = *this;
+		this->stocare = this->stocare + 34;
+		return aux;
+	}
+	friend float conversieGbToMb(Program p);
+	friend istream& operator>>(istream& in, Program& p);
+	friend ostream& operator<<(ostream& out, Program p);
 };
+
+ istream& operator>>(istream& in, Program& p)
+{
+	cout << " \nNume:";
+	in >> p.nume;
+	cout << " \nStocare:";
+	in >> p.stocare;
+	cout << " \n Nr limbaje folosite:";
+	in >> p.nrLimbajeFolosite;
+	if (p.limbajeFolosite != NULL)
+	{
+		delete[]p.limbajeFolosite;
+	}
+	p.limbajeFolosite = new string[p.nrLimbajeFolosite];
+	for (int i = 0; i < p.nrLimbajeFolosite; i++)
+	{
+		cout << " Limbajul " << i + 1 << " : ";
+		in >> p.limbajeFolosite[i];
+	}
+	
+	return in;
+}
+
+ostream& operator<<(ostream& out,  Program p)
+{
+	cout << " Programul ";
+	out << p.nume;
+	cout << " are id-ul ";
+	out << p.id;
+	out << " ,este folosit de "; out << p.corporatie;
+	cout << " , ocupa spatiu de ";
+	out << p.stocare;
+	cout << " GB , iar pentru cele ";
+	out << p.nrLimbajeFolosite;
+	cout<< " limbaje s-au folosit: ";
+	if (p.nrLimbajeFolosite == 0)
+	{
+		cout << " - ";
+	}
+	else
+	{
+		for (int i = 0; i < p.nrLimbajeFolosite; i++)
+			out << "\n" << p.limbajeFolosite[i] << " ";
+		cout << endl;
+	}
+	cout << endl;
+	return out;
+}
 float conversieGbToMb(Program p)
 {
 	return p.stocare * 1024;
@@ -287,12 +349,12 @@ public:
 		return Antivirus::versiune;
 	}
 
-	float getTimpAnalizare()  
+	float getTimpAnalizare()
 	{
 		return this->timpAnalizare;
 	}
 
-	int getNrDetinatori() const 
+	int getNrDetinatori() const
 	{
 		return this->nrDetinatori;
 	}
@@ -338,16 +400,129 @@ public:
 	{
 		return this->esteComplex;
 	}
-	
+
 	void setNume(string nume)
 	{
 		this->nume = nume;
 	}
 
 	friend float conversieMinToHr(Antivirus a);
+	friend istream& operator>>(istream& in, Antivirus& a);
+	friend ostream& operator<<(ostream& out, Antivirus a);
+
+	Antivirus& operator--()            //pre
+	{
+		if (this->timpAnalizare > 0)
+		{
+			this->timpAnalizare = this->timpAnalizare - 10;
+			return *this;
+		}
+	
+	}
+
+	Antivirus operator--(int )              //post
+	{
+		Antivirus aux = *this;
+		if (this->timpAnalizare > 0)
+		{
+			this->timpAnalizare = this->timpAnalizare - 10;
+			return aux;
+		}
+	}
+	
+	bool operator==(const Antivirus& a)
+	{
+		bool ok1 = false ;
+		bool ok2 = false;
+		int check = 0;
+		if (this->nume == a.nume && this->timpAnalizare == a.timpAnalizare && this-> esteComplex == a.esteComplex && this->nrDetinatori == a.nrDetinatori)
+		{
+			ok1 = true;
+		}
+		for (int i = 0; i < this->nrDetinatori; i++)
+		{
+			if (this->departamente[i] == a.departamente[i])
+			{
+				check=check +1;
+			}
+		}
+		if (check == this->nrDetinatori )
+		{
+			ok2 = true;
+		}
+		if (ok1 == false || ok2 == false)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+
+	/*const int numar;
+	static int versiune;
+	string nume;
+	float timpAnalizare;
+	bool esteComplex;
+	int nrDetinatori;
+	string* departamente;*/
 };
 
 int Antivirus::versiune(2023);
+
+istream& operator>>(istream& in, Antivirus& a)
+{
+	cout << " \nNume:";
+	in >> a.nume;
+	cout << " \nTimp analizare:";
+	in >> a.timpAnalizare;
+	cout << " Complex? true - 1 / false - 0: ";
+	in >> a.esteComplex;
+	cout << " \n Nr detinatori:";
+	in >> a.nrDetinatori;
+	if (a.departamente != NULL)
+	{
+		delete[]a.departamente;
+	}
+	a.departamente = new string[a.nrDetinatori];
+	for (int i = 0; i < a.nrDetinatori; i++)
+	{
+		cout << " Departamentul " << i + 1 << " : ";
+		in >> a.departamente[i];
+	}
+
+	return in;
+}
+
+
+ostream& operator<<(ostream& out, const Antivirus a)
+{
+	cout << " Programul ";
+	out << a.nume;
+	cout << " are numarul specific ";
+	out << a.numar;
+	out << " ,are versiunea aferenta anului "; out <<a.versiune;
+	cout << " , are timpul de analizare de ";
+	out << a.timpAnalizare;
+	(a.esteComplex == 1) ? (cout << " ,minute ,prezinta complexitate, ") : (cout << " minute, nu prezinta complexitate ");
+	cout << "  iar cei ";
+	out << a.nrDetinatori;
+	cout << " detinatori sunt departamentele: ";
+	if (a.nrDetinatori == 0)
+	{
+		cout << " - ";
+	}
+	else
+	{
+		for (int i = 0; i < a.nrDetinatori; i++)
+			out << "\n" << a.departamente[i] << " ";
+		cout << endl;
+	}
+	cout << endl;
+	return out;
+}
+
 float conversieMinToHr(Antivirus a)
 {
 	return a.timpAnalizare / 60;
@@ -363,7 +538,7 @@ private:
 	bool areInternet;
 	int nrComponente;
 	string* componente;
-	
+
 public:
 	Calculator() : id(0)
 	{
@@ -418,11 +593,11 @@ public:
 		{
 			if (this->componente != NULL)
 				delete[]this->componente;
-				this->culoare = c.culoare;
-				this->pret = c.pret;
-				this->areInternet = c.areInternet;
-				this->nrComponente = c.nrComponente;
-				this->componente = new string[c.nrComponente];
+			this->culoare = c.culoare;
+			this->pret = c.pret;
+			this->areInternet = c.areInternet;
+			this->nrComponente = c.nrComponente;
+			this->componente = new string[c.nrComponente];
 			if (nrComponente == 0)
 				cout << " - ";
 			else
@@ -521,8 +696,138 @@ public:
 	{
 		return this->areInternet;
 	}
+
+	friend istream& operator>>(istream& in, Calculator& c);
+	friend ostream& operator<<(ostream& out, Calculator c);
+
+	bool operator!=(const Calculator& c)
+	{
+		bool ok1 = false;
+		int check = 0;
+		int ok2 = false;
+		if (this->culoare == c.culoare && this->pret == c.pret && this->areInternet == c.areInternet && this->nrComponente == c.nrComponente)
+		{
+			ok1 = true;
+		}
+		for (int i = 0; i < nrComponente; i++)
+		{
+			if (this->componente[i] == c.componente[i])
+			{
+				check = check + 1;
+			}
+		}
+		if (check == this->nrComponente)
+		{
+			ok2 = true;
+		}
+		if (ok1 == false || ok2 == false)
+		{
+			return true;
+		}
+		else
+		{
+			return false; 
+		}
+	}
+
+	Calculator& operator!()
+	{
+		this->areInternet = !this->areInternet;
+		return *this;
+	}
+	/*const int id;
+	static int driver;
+	string culoare;
+	float pret;
+	bool areInternet;
+	int nrComponente;
+	string* componente;*/
+
+	Calculator operator+(const Calculator& c)
+	{
+		Calculator aux;
+		aux.culoare = this->culoare;
+		aux.pret = this->pret + c.pret;
+		if (this->areInternet == true || c.areInternet == true)
+		{
+			aux.areInternet = true;
+		}
+		else
+		{
+			aux.areInternet = false;
+		}
+
+		aux.nrComponente = this->nrComponente + c.nrComponente;
+		if (aux.componente != NULL)
+		{
+			delete[]aux.componente;
+		}
+		aux.componente = new string[this->nrComponente + c.nrComponente];
+		for (int i = 0; i < this->nrComponente; i++)
+		{
+			aux.componente[i] = this->componente[i];
+		}
+		for (int j = this->nrComponente;j< aux.nrComponente;j++)
+		{
+			aux.componente[j] = c.componente[j - this->nrComponente];
+		}
+		return aux;
+	}
+	
 };
 int Calculator::driver(2023);
+
+istream& operator>>(istream& in, Calculator& c)
+{
+	cout << " \nCuloare:";
+	in >> c.culoare;
+	cout << " \nPret:";
+	in >> c.pret;
+	cout << " Are Internet? Da - 1 / Nu - 0: ";
+	in >> c.areInternet;
+	cout << " \n Nr componente:";
+	in >> c.nrComponente;
+	if (c.componente != NULL)
+	{
+		delete[]c.componente;
+	}
+	c.componente = new string[c.nrComponente];
+	for (int i = 0; i < c.nrComponente; i++)
+	{
+		cout << " Componenta " << i + 1 << " : ";
+		in >> c.componente[i];
+	}
+
+	return in;
+}
+
+
+ostream& operator<<(ostream& out, const Calculator c)
+{
+	cout << " Calculatorul de culoare ";
+	out << c.culoare;
+	cout << " are id-ul ";
+	out << c.id;
+	out << " ,are driverele instalate aferente anului "; out << c.driver;
+	cout << " , are pretul de ";
+	out << c.pret;
+	(c.areInternet == 1) ? (cout << " ,RON, prezinta conexiune la internet ") : (cout << " RON, nu prezinta conexiune la internet ");
+	cout << "  iar cele ";
+	out << c.nrComponente;
+	cout << "  componente sunt: ";
+	if (c.nrComponente == 0)
+	{
+		cout << " - ";
+	}
+	else
+	{
+		for (int i = 0; i < c.nrComponente; i++)
+			out << "\n" << c.componente[i] << " ";
+		cout << endl;
+	}
+	cout << endl;
+	return out;
+}
 
 int main()
 {
@@ -602,8 +907,8 @@ int main()
 	cout << " Antivirusul " << antivirus5.getNume() << " are acum numele ";
 	antivirus5.setNume("AntiTrojan");
 	cout << antivirus5.getNume() << " cu id-ul " << antivirus5.getNumar() << " si poseda specificatiile: ";
-	cout << "\n Timp analizare (ieri:  " ;
-	cout<< antivirus5.getTimpAnalizare();
+	cout << "\n Timp analizare (ieri:  ";
+	cout << antivirus5.getTimpAnalizare();
 	cout << " ) (azi: ";
 	antivirus5.setTimpAnalizare(20);
 	cout << antivirus5.getTimpAnalizare() << " )";
@@ -612,20 +917,20 @@ int main()
 	cout << " ) (azi: ";
 	antivirus5.setEsteComplex(false);
 	cout << antivirus5.getEsteComplex() << " )";
-	cout << "\n Departamente (ieri:  " ;
-		for (int i = 0; i < antivirus5.getNrDetinatori(); i++)
+	cout << "\n Departamente (ieri:  ";
+	for (int i = 0; i < antivirus5.getNrDetinatori(); i++)
 	{
-		cout <<" " << *(antivirus5.getDepartamente() + i);
+		cout << " " << *(antivirus5.getDepartamente() + i);
 	}
 	cout << " ) (azi: ";
 	string* departamente1 = new string[4]{ "HR", "BACKEND" ,"LOGISTICA","VANZARI" };
-	
+
 	antivirus5.setDepartamente(4, departamente1);
-		for (int i = 0; i < antivirus5.getNrDetinatori(); i++)
-		{
-			cout << " "<< * (antivirus5.getDepartamente() + i);
-		}
-		cout << " )";
+	for (int i = 0; i < antivirus5.getNrDetinatori(); i++)
+	{
+		cout << " " << *(antivirus5.getDepartamente() + i);
+	}
+	cout << " )";
 
 
 
@@ -643,7 +948,7 @@ int main()
 	program5.setCorporatie("OMW");
 	cout << program5.getCorporatie() << " )";
 	cout << "\n Limbaje folosite (ieri:  ";
-		for (int i = 0; i < program5.getNrLimbajeFolosite(); i++)
+	for (int i = 0; i < program5.getNrLimbajeFolosite(); i++)
 	{
 		cout << " " << *(program5.getLimbajeFolosite() + i);
 	}
@@ -651,15 +956,15 @@ int main()
 	string* limbaje1 = new string[4]{ "Python", "C++" ,"Malbolge","LOLCODE" };
 
 	program5.setLimbajeFolosite(4, limbaje1);
-		for (int i = 0; i < program5.getNrLimbajeFolosite(); i++)
+	for (int i = 0; i < program5.getNrLimbajeFolosite(); i++)
 	{
 		cout << " " << *(program5.getLimbajeFolosite() + i);
 	}
 	cout << " )";
-	
 
 
-	cout << " \n\nCalculatorul " <<  " cu id-ul " << program5.getId() << " poseda specificatiile: ";
+
+	cout << " \n\nCalculatorul " << " cu id-ul " << program5.getId() << " poseda specificatiile: ";
 	cout << "\n Culoare (ieri:  ";
 	cout << calculator5.getCuloare();
 	cout << " ) (azi: ";
@@ -691,9 +996,59 @@ int main()
 	cout << " )";
 	cout << endl;
 
-	cout << program5.getStocare()<< " GB = "<< conversieGbToMb(program5)<< " MB\n";
+	cout << program5.getStocare() << " GB = " << conversieGbToMb(program5) << " MB\n";
 	cout << antivirus5.getTimpAnalizare() << " min = " << conversieMinToHr(antivirus5) << " Hours \n";
+
+	Program program100;
+	cin >> program100;
+	Program program101;
 	
+	program101 = program100++;
+	cout << program100;
+	cout << program101;
+	
+	Program program102;
+	program102 = ++program101;
+	cout << program102;
+
+	
+
+	Antivirus antivirus100;
+	cin >> antivirus100;
+	Antivirus antivirus101;
+	antivirus101 = antivirus100--;
+	Antivirus antivirus102;
+	antivirus102 = --antivirus100;
+	cout << antivirus100;
+	cout << antivirus101;
+	cout << antivirus102;
+
+	Calculator calculator100;
+	cin >> calculator100;
+	cout << calculator100;
+
+	Calculator calculator105;
+	calculator105 = calculator5 + calculator3;
+	cout << calculator105;
+
+	Calculator calculator50, calculator60;
+	cin >> calculator50;
+	cin >> calculator60;
+
+	(calculator50 != calculator60) ? (cout << "Ai dreptate, nu sunt egale") : (cout << "Nu ai dreptate, sunt cam egale");
+	Calculator calculator1000;
+	Calculator calculator1001;
+	cin >> calculator1000;
+	cout << calculator1000;
+	calculator1001 = (!calculator1000);
+	cout << calculator1001;
+
+	Antivirus antivirus500;
+	Antivirus antivirus600;
+	cin >> antivirus500;
+	cin >> antivirus600;
+	(antivirus500 == antivirus600) ? (cout << "sunt egali") : (cout << " nu sunt egali");
+
 
 
 }
