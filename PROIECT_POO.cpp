@@ -202,27 +202,27 @@ public:
 
 ostream& operator<<(ostream& out,  Program p)
 {
-	cout << " Programul ";
+	out << " Programul ";
 	out << p.nume;
-	cout << " are id-ul ";
+	out << " are id-ul ";
 	out << p.id;
 	out << " ,este folosit de "; out << p.corporatie;
-	cout << " , ocupa spatiu de ";
+	out << " , ocupa spatiu de ";
 	out << p.stocare;
-	cout << " GB , iar pentru cele ";
+	out << " GB , iar pentru cele ";
 	out << p.nrLimbajeFolosite;
-	cout<< " limbaje s-au folosit: ";
+	out<< " limbaje s-au folosit: ";
 	if (p.nrLimbajeFolosite == 0)
 	{
-		cout << " - ";
+		out << " - ";
 	}
 	else
 	{
 		for (int i = 0; i < p.nrLimbajeFolosite; i++)
 			out << "\n" << p.limbajeFolosite[i] << " ";
-		cout << endl;
+		out << endl;
 	}
-	cout << endl;
+	out << endl;
 	return out;
 }
 float conversieGbToMb(Program p)
@@ -460,13 +460,7 @@ public:
 		}
 	}
 
-	/*const int numar;
-	static int versiune;
-	string nume;
-	float timpAnalizare;
-	bool esteComplex;
-	int nrDetinatori;
-	string* departamente;*/
+	
 };
 
 int Antivirus::versiune(2023);
@@ -704,7 +698,7 @@ public:
 	{
 		bool ok1 = false;
 		int check = 0;
-		int ok2 = false;
+		bool ok2 = false;
 		if (this->culoare == c.culoare && this->pret == c.pret && this->areInternet == c.areInternet && this->nrComponente == c.nrComponente)
 		{
 			ok1 = true;
@@ -1049,6 +1043,69 @@ int main()
 	cin >> antivirus600;
 	(antivirus500 == antivirus600) ? (cout << "sunt egali") : (cout << " nu sunt egali");
 
+	Program* programV = new Program[3];
+	Antivirus* antivirusV = new Antivirus[3];
+	Calculator* calculatorV = new Calculator[3];
+	//CITIRE AFISARE VECTORI OBIECTE
+	for (int i = 0; i < 3; i++)
+	{
+		cin >> programV[i];
+		cout << endl;
+	}
 
+	for (int i = 0; i < 3; i++)
+	{
+		cout<< programV[i];
+		cout << endl;
+	}
 
+	for (int i = 0; i < 3; i++)
+	{
+		cin >> antivirusV[i];
+		cout << endl;
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		cout << antivirusV[i];
+		cout << endl;
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		cin >> calculatorV[i];
+		cout << endl;
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		cout << calculatorV[i];
+		cout << endl;
+	}
+	 //MATRICE
+	Antivirus** antivirusMAT = new Antivirus * [2];
+
+		for (int i = 0; i < 2; i++)
+	{
+		antivirusMAT[i] = new Antivirus[2];
+	}
+
+		for (int i = 0; i < 2; i++)
+		{
+			for (int j = 0; j < 2; j++)
+			{
+				cin >> antivirusMAT[i][j];
+				cout<< endl;
+			}
+		}
+
+		for (int i = 0; i < 2; i++)
+		{
+			for (int j = 0; j < 2; j++)
+			{
+				cout << i << j << endl;
+				cout << antivirusMAT[i][j];
+				cout << endl;
+			}
+		}
 }
