@@ -167,18 +167,19 @@ public:
 		return *this;
 	}
 
-	Program operator++(int )
+	Program operator++(int)
 	{                                      /*post*/
 		Program aux = *this;
 		this->stocare = this->stocare + 34;
 		return aux;
 	}
+
 	friend float conversieGbToMb(Program p);
 	friend istream& operator>>(istream& in, Program& p);
 	friend ostream& operator<<(ostream& out, Program p);
 };
 
- istream& operator>>(istream& in, Program& p)
+istream& operator>>(istream& in, Program& p)
 {
 	cout << " \nNume:";
 	in >> p.nume;
@@ -196,33 +197,33 @@ public:
 		cout << " Limbajul " << i + 1 << " : ";
 		in >> p.limbajeFolosite[i];
 	}
-	
+
 	return in;
 }
 
-ostream& operator<<(ostream& out,  Program p)
+ostream& operator<<(ostream& out, Program p)
 {
-	out << " Programul ";
+	cout << " Programul ";
 	out << p.nume;
-	out << " are id-ul ";
+	cout << " are id-ul ";
 	out << p.id;
 	out << " ,este folosit de "; out << p.corporatie;
-	out << " , ocupa spatiu de ";
+	cout << " , ocupa spatiu de ";
 	out << p.stocare;
-	out << " GB , iar pentru cele ";
+	cout << " GB , iar pentru cele ";
 	out << p.nrLimbajeFolosite;
-	out<< " limbaje s-au folosit: ";
+	cout << " limbaje s-au folosit: ";
 	if (p.nrLimbajeFolosite == 0)
 	{
-		out << " - ";
+		cout << " - ";
 	}
 	else
 	{
 		for (int i = 0; i < p.nrLimbajeFolosite; i++)
 			out << "\n" << p.limbajeFolosite[i] << " ";
-		out << endl;
+		cout << endl;
 	}
-	out << endl;
+	cout << endl;
 	return out;
 }
 float conversieGbToMb(Program p)
@@ -417,10 +418,10 @@ public:
 			this->timpAnalizare = this->timpAnalizare - 10;
 			return *this;
 		}
-	
+
 	}
 
-	Antivirus operator--(int )              //post
+	Antivirus operator--(int)              //post
 	{
 		Antivirus aux = *this;
 		if (this->timpAnalizare > 0)
@@ -429,13 +430,13 @@ public:
 			return aux;
 		}
 	}
-	
+
 	bool operator==(const Antivirus& a)
 	{
-		bool ok1 = false ;
+		bool ok1 = false;
 		bool ok2 = false;
 		int check = 0;
-		if (this->nume == a.nume && this->timpAnalizare == a.timpAnalizare && this-> esteComplex == a.esteComplex && this->nrDetinatori == a.nrDetinatori)
+		if (this->nume == a.nume && this->timpAnalizare == a.timpAnalizare && this->esteComplex == a.esteComplex && this->nrDetinatori == a.nrDetinatori)
 		{
 			ok1 = true;
 		}
@@ -443,10 +444,10 @@ public:
 		{
 			if (this->departamente[i] == a.departamente[i])
 			{
-				check=check +1;
+				check = check + 1;
 			}
 		}
-		if (check == this->nrDetinatori )
+		if (check == this->nrDetinatori)
 		{
 			ok2 = true;
 		}
@@ -496,7 +497,7 @@ ostream& operator<<(ostream& out, const Antivirus a)
 	out << a.nume;
 	cout << " are numarul specific ";
 	out << a.numar;
-	out << " ,are versiunea aferenta anului "; out <<a.versiune;
+	out << " ,are versiunea aferenta anului "; out << a.versiune;
 	cout << " , are timpul de analizare de ";
 	out << a.timpAnalizare;
 	(a.esteComplex == 1) ? (cout << " ,minute ,prezinta complexitate, ") : (cout << " minute, nu prezinta complexitate ");
@@ -666,7 +667,7 @@ public:
 
 	void setComponente(int nrComponente, string* componente)
 	{
-		if (nrComponente > 0)
+		if (nrComponente >= 0)
 		{
 			this->nrComponente = nrComponente;
 			if (this->componente != NULL)
@@ -720,7 +721,7 @@ public:
 		}
 		else
 		{
-			return false; 
+			return false;
 		}
 	}
 
@@ -729,13 +730,7 @@ public:
 		this->areInternet = !this->areInternet;
 		return *this;
 	}
-	/*const int id;
-	static int driver;
-	string culoare;
-	float pret;
-	bool areInternet;
-	int nrComponente;
-	string* componente;*/
+	
 
 	Calculator operator+(const Calculator& c)
 	{
@@ -761,13 +756,13 @@ public:
 		{
 			aux.componente[i] = this->componente[i];
 		}
-		for (int j = this->nrComponente;j< aux.nrComponente;j++)
+		for (int j = this->nrComponente; j < aux.nrComponente; j++)
 		{
 			aux.componente[j] = c.componente[j - this->nrComponente];
 		}
 		return aux;
 	}
-	
+
 };
 int Calculator::driver(2023);
 
@@ -823,9 +818,144 @@ ostream& operator<<(ostream& out, const Calculator c)
 	return out;
 }
 
+class Programator
+{
+private:
+	static int nrProgramatori;
+	string nume;
+	Calculator calculator;
+	int nrPrograme;
+	Program* programe;
+	bool esteIncepator;
+
+public:
+	Programator()
+	{
+		this->nume = " JohnDoe ";
+		this->nrPrograme = 0;
+		this->esteIncepator = false;
+		this->calculator.setCuloare("neagra");
+		this->calculator.setPret(0);
+		this->calculator.setAreInternet(false);
+		string* componente = NULL;
+		this->calculator.setComponente(0,componente);
+		this->nrPrograme = 0;
+		this->esteIncepator = true;
+		this->programe = NULL;
+
+	}
+	~Programator()
+	{
+		delete[]programe;
+		
+	}
+
+	static int getNrProgramatori()
+	{
+		return Programator::nrProgramatori;
+	}
+
+	string getNume()
+	{
+		return this->nume;
+	}
+	void setNume(string nume)
+	{
+		this->nume = nume;
+	}
+
+	void setEsteIncepator(bool esteIncepator)
+	{
+		this->esteIncepator = esteIncepator;
+	}
+	bool getEsteIncepator()
+	{
+		return this->esteIncepator;
+	}
+
+
+	string getCalculatorCuloare()
+	{
+		this->calculator.getCuloare();
+	}
+	void setCalculatorCuloare(string culoare)
+	{
+		this->calculator.setCuloare(culoare);
+	}
+
+	float getCalculatorPret()
+	{
+		return this->calculator.getPret();
+	}
+	void setCalculatorPret(float pret)
+	{
+		this->calculator.setPret(pret);
+	}
+
+	bool getCalculatorAreInternet()
+	{
+		return this->calculator.getAreInternet();
+	}
+	void setCalculatorAreInternet(bool areInternet)
+	{
+		this->calculator.setAreInternet(areInternet);
+	}
+
+	int getCalculatorNrComponente()
+	{
+		return this->calculator.getNrComponente();
+	}
+	string* getCalculatorComponente()
+	{
+		return this->calculator.getComponente();
+	}
+	void setCalculatorComponente(int nrComponente, string* Componente)
+	{
+		this->calculator.setComponente(nrComponente, Componente);
+	}
+
+	int getNrPrograme()
+	{
+		return this->nrPrograme;
+	}
+	Program* getPrograme()
+	{
+		return this->programe;
+	}
+	void setPrograme(int nrPrograme, Program* programe)
+	{
+		if (nrPrograme > 0)
+		{
+			this->nrPrograme = nrPrograme;
+
+			if (this->programe != NULL)
+			{
+				delete[]this->programe;
+			}
+			this->programe = new Program[nrPrograme];
+			for (int i = 0; i < this->nrPrograme; i++)
+			{
+				this->programe[i] = programe[i];
+			}
+		}
+	}
+
+
+	
+	/*static int nrProgramatori;
+	string nume;
+	Calculator calculator;
+	int nrPrograme;
+	Program* programe;
+	bool esteIncepator;*/
+	
+
+};
+int Programator::nrProgramatori = 0;
+
 int main()
 {
-	Program program1;
+	/*Program program1;
 	program1.afisare();
 
 	Program program2("Destroyer", 80);
@@ -996,16 +1126,16 @@ int main()
 	Program program100;
 	cin >> program100;
 	Program program101;
-	
+
 	program101 = program100++;
 	cout << program100;
 	cout << program101;
-	
+
 	Program program102;
 	program102 = ++program101;
 	cout << program102;
 
-	
+
 
 	Antivirus antivirus100;
 	cin >> antivirus100;
@@ -1042,7 +1172,6 @@ int main()
 	cin >> antivirus500;
 	cin >> antivirus600;
 	(antivirus500 == antivirus600) ? (cout << "sunt egali") : (cout << " nu sunt egali");
-
 	Program* programV = new Program[3];
 	Antivirus* antivirusV = new Antivirus[3];
 	Calculator* calculatorV = new Calculator[3];
@@ -1083,7 +1212,7 @@ int main()
 		cout << endl;
 	}
 	 //MATRICE
-	Antivirus** antivirusMAT = new Antivirus * [2];
+	Antivirus** antivirusMAT = new Antivirus* [2];
 
 		for (int i = 0; i < 2; i++)
 	{
@@ -1108,4 +1237,23 @@ int main()
 				cout << endl;
 			}
 		}
+
+		delete[]programV;
+		delete[]antivirusV;
+		delete[]calculatorV;
+		for (int k = 0; k < 2; k++)
+		{
+			delete[]antivirusMAT[k];
+		}
+		delete[]antivirusMAT;*/
+
+
+	Programator p1;
+	
+
+	
+
+	
+
+
 }
