@@ -177,6 +177,7 @@ public:
 	friend float conversieGbToMb(Program p);
 	friend istream& operator>>(istream& in, Program& p);
 	friend ostream& operator<<(ostream& out, Program p);
+	friend class Programator;
 };
 
 istream& operator>>(istream& in, Program& p)
@@ -461,7 +462,7 @@ public:
 		}
 	}
 
-	
+
 };
 
 int Antivirus::versiune(2023);
@@ -673,11 +674,12 @@ public:
 			if (this->componente != NULL)
 			{
 				delete[]this->componente;
-			}
-			this->componente = new string[nrComponente];
-			for (int i = 0; i < nrComponente; i++)
-			{
-				this->componente[i] = componente[i];
+
+				this->componente = new string[nrComponente];
+				for (int i = 0; i < nrComponente; i++)
+				{
+					this->componente[i] = componente[i];
+				}
 			}
 		}
 	}
@@ -694,6 +696,7 @@ public:
 
 	friend istream& operator>>(istream& in, Calculator& c);
 	friend ostream& operator<<(ostream& out, Calculator c);
+	friend class Programator;
 
 	bool operator!=(const Calculator& c)
 	{
@@ -730,7 +733,7 @@ public:
 		this->areInternet = !this->areInternet;
 		return *this;
 	}
-	
+
 
 	Calculator operator+(const Calculator& c)
 	{
@@ -832,22 +835,137 @@ public:
 	Programator()
 	{
 		this->nume = " JohnDoe ";
-		this->nrPrograme = 0;
-		this->esteIncepator = false;
-		this->calculator.setCuloare("neagra");
-		this->calculator.setPret(0);
-		this->calculator.setAreInternet(false);
-		string* componente = NULL;
-		this->calculator.setComponente(0,componente);
+
+
+		this->calculator.culoare = " neagra ";
+		this->calculator.pret = 0;
+		this->calculator.areInternet = false;
+		this->calculator.nrComponente = 0;
+		this->calculator.componente = NULL;
 		this->nrPrograme = 0;
 		this->esteIncepator = true;
 		this->programe = NULL;
 
+		this->nrProgramatori++;
+
+	}
+	Programator(string nume, bool esteIncepator, Calculator& c, int nrPrograme, Program* programe)
+	{
+		this->nume = nume;
+
+
+		this->calculator.culoare = c.culoare;
+		this->calculator.pret = c.pret;
+		this->calculator.areInternet = c.areInternet;
+		this->calculator.nrComponente = c.nrComponente;
+		if (calculator.componente != NULL)
+		{
+			delete[]this->calculator.componente;
+		}
+		calculator.componente = new string[calculator.nrComponente];
+		for (int i = 0; i < c.nrComponente; i++)
+		{
+			this->calculator.componente[i] = c.componente[i];
+		}
+
+		this->nrPrograme = nrPrograme;
+		this->esteIncepator = esteIncepator;
+
+		if (this->programe != NULL)
+		{
+			delete[]this->programe;
+		}
+		this->programe = new Program[this->nrPrograme];
+		for (int i = 0; i < this->nrPrograme; i++)
+		{
+			this->programe[i] = programe[i];
+		}
+
+
+		this->nrProgramatori++;
+	}
+
+	Programator(const Programator& p)
+	{
+
+		this->nume = p.nume;
+
+
+		this->calculator.culoare = p.calculator.culoare;
+		this->calculator.pret = p.calculator.pret;
+		this->calculator.areInternet = p.calculator.areInternet;
+		this->calculator.nrComponente = p.calculator.nrComponente;
+		if (calculator.componente != NULL)
+		{
+			delete[]this->calculator.componente;
+		}
+		calculator.componente = new string[p.calculator.nrComponente];
+		for (int i = 0; i < p.calculator.nrComponente; i++)
+		{
+			this->calculator.componente[i] = p.calculator.componente[i];
+		}
+
+		this->nrPrograme = p.nrPrograme;
+		this->esteIncepator = p.esteIncepator;
+
+		if (this->programe != NULL)
+		{
+			delete[]this->programe;
+		}
+		this->programe = new Program[this->nrPrograme];
+		for (int i = 0; i < this->nrPrograme; i++)
+		{
+			this->programe[i] = p.programe[i];
+		}
+
+
+		this->nrProgramatori++;
+
+	}
+
+	const Programator& operator=(const Programator& p)
+	{
+		if (this != &p)
+		{
+			this->nume = p.nume;
+
+
+			this->calculator.culoare = p.calculator.culoare;
+			this->calculator.pret = p.calculator.pret;
+			this->calculator.areInternet = p.calculator.areInternet;
+			this->calculator.nrComponente = p.calculator.nrComponente;
+			if (calculator.componente != NULL)
+			{
+				delete[]this->calculator.componente;
+			}
+			calculator.componente = new string[p.calculator.nrComponente];
+			for (int i = 0; i < p.calculator.nrComponente; i++)
+			{
+				this->calculator.componente[i] = p.calculator.componente[i];
+			}
+
+			this->nrPrograme = p.nrPrograme;
+			this->esteIncepator = p.esteIncepator;
+
+			if (this->programe != NULL)
+			{
+				delete[]this->programe;
+			}
+			this->programe = new Program[this->nrPrograme];
+			for (int i = 0; i < this->nrPrograme; i++)
+			{
+				this->programe[i] = p.programe[i];
+			}
+
+
+			this->nrProgramatori++;
+		}
+		return *this;
 	}
 	~Programator()
 	{
 		delete[]programe;
-		
+
 	}
 
 	static int getNrProgramatori()
@@ -876,7 +994,7 @@ public:
 
 	string getCalculatorCuloare()
 	{
-		this->calculator.getCuloare();
+		return this->calculator.getCuloare();
 	}
 	void setCalculatorCuloare(string culoare)
 	{
@@ -940,15 +1058,64 @@ public:
 		}
 	}
 
+	friend ostream& operator<<(ostream& out, const Programator& p)
+	{
+		out << "Programatorul cu numele " << p.nume << " detine urmatorul calculator : " << endl << endl;
+		out << p.calculator << endl;
+		(p.esteIncepator == true) ? (out << "De asemenea, el este incepator ") : (out << "De asemenea, el nu este incepator ");
+		out << " este cunoscator de " << p.nrPrograme << " programe, acestea fiind " << endl;
+		for (int i = 0; i < p.nrPrograme; i++)
+		{
+			out << "Programul " << i + 1 << ". " << endl;
+			out << (Program)p.programe[i] << endl;
+		}
+		out << " Exista in corporatie " << p.nrProgramatori << " programatori activi";
+		return out;
+	}
+	friend istream& operator>>(istream& in, Programator& p)
+	{
+		cout << "Nume : ";
+		in >> p.nume;
+		cout << " Despre calculator..." << endl;
+		in >> p.calculator;
+		cout << " Este incepator?(0-Nu / 1 - Da): ";
+		in >> p.esteIncepator;
+		cout << " Nr programe cunoscute ";
+		in >> p.nrPrograme;
+		cout << "Acestea sunt : " << endl;
+		if (p.programe != NULL)
+		{
+			delete[]p.programe;
+		}
+		p.programe = new Program[p.nrPrograme];
+		for (int i = 0; i < p.nrPrograme; i++)
+		{
+			cout << "Programul " << i + 1 << ". ";
+			in >> (Program&)p.programe[i];
+		}
 
-	
-	/*static int nrProgramatori;
-	string nume;
-	Calculator calculator;
-	int nrPrograme;
-	Program* programe;
-	bool esteIncepator;*/
-	
+		return in;
+	}
+
+	bool operator!=(const Programator& p)
+	{
+		return this->nrPrograme != p.nrPrograme;
+	}
+
+	bool operator==(const Programator& p)
+	{
+		return this->nrPrograme == p.nrPrograme;
+	}
+
+	bool operator<=(const Programator& p)
+	{
+		return this->nrPrograme <= p.nrPrograme;
+	}
+
+
+
+
+
 
 };
 int Programator::nrProgramatori = 0;
@@ -1248,12 +1415,108 @@ int main()
 		delete[]antivirusMAT;*/
 
 
-	Programator p1;
-	
+	string* componente = new string[4]{ "Placa_Video","RAM","Proc_Intel","Placa_sunet" };
+	Calculator c1(16, "Roz", 15000, true, 4, componente);
+	Program* programe = new Program[2];
+	cin>>programe[0];
+	cin>>programe[1];
 
-	
+	Programator p1("Andrei", true, c1, 2, programe);
+	Programator p2(p1);
+	cout << p2;
 
-	
+	Programator p3;
+	cin >> p3;
+	cout << p3;
+
+	cout << "Programatorul cu numele " << p1.getNume() << " detine urmatorul calculator : " << endl << endl;
+	cout << p1.getCalculatorCuloare()<<endl<<p1.getCalculatorPret()<<endl<<p1.getCalculatorAreInternet()<<endl<<p1.getCalculatorNrComponente()<<endl << endl;
+	for (int i = 0; i < p1.getCalculatorNrComponente(); i++)
+	{
+		cout << *(p1.getCalculatorComponente() + i) << endl;
+	}
+	(p1.getEsteIncepator() == true) ? (cout << "De asemenea, el este incepator, ") : (cout << "De asemenea, el nu este incepator,  ");
+	cout << " este cunoscator de " << p1.getNrPrograme() << " programe, acestea fiind " << endl;
+	for (int i = 0; i < p1.getNrPrograme(); i++)
+	{
+		cout << "Programul " << i + 1 << ". " << endl;
+		cout <<p1.getPrograme()[i] << endl;
+	}
+	cout << " Exista in corporatie " << p1.getNrProgramatori() << " programatori activi";
+
+
+
+	p1.setNume("Costel");
+	p1.setCalculatorCuloare("VERNIL");
+	p1.setCalculatorPret(666);
+	p1.setCalculatorAreInternet(true);
+
+	string* componente1 = new string[1]{"COMPONENTA"};
+
+	p1.setCalculatorComponente(1,componente1) ;
+
+	p1.setEsteIncepator(false);
+	Program* programeNoi = new Program[1];
+	cin>>programeNoi[0];
+	p1.setPrograme(1,programeNoi);
+
+
+
+
+
+
+	cout << "Programatorul cu numele " << p1.getNume() << " detine urmatorul calculator : " << endl << endl;
+	cout << p1.getCalculatorCuloare() << endl << p1.getCalculatorPret() << endl << p1.getCalculatorAreInternet() << endl << p1.getCalculatorNrComponente() << endl << endl;
+	for (int i = 0; i < p1.getCalculatorNrComponente(); i++)
+	{
+		cout << *(p1.getCalculatorComponente() + i) << endl;
+	}
+	(p1.getEsteIncepator() == true) ? (cout << "De asemenea, el este incepator, ") : (cout << "De asemenea, el nu este incepator,  ");
+	cout << " este cunoscator de " << p1.getNrPrograme() << " programe, acestea fiind " << endl;
+	for (int i = 0; i < p1.getNrPrograme(); i++)
+	{
+		cout << "Programul " << i + 1 << ". " << endl;
+		cout << p1.getPrograme()[i] << endl;
+	}
+	cout << " Exista in corporatie " << p1.getNrProgramatori() << " programatori activi";
+
+	Programator p4;
+	cin >> p4;
+	Programator p5;
+	p5 = p4;
+	cout << p5;
+
+	if (p1 == p2)
+	{
+		cout<<"adevarat"<<endl;
+	}
+	else
+	{
+		cout<<"false" << endl;
+	}
+	if (p1 != p2)
+	{
+		cout << "adevarat" << endl;
+	}
+	else
+	{
+		cout << "false" << endl;
+	}
+	if (p1 <= p2)
+	{
+		cout << "adevarat"<<endl;
+	}
+	else
+	{
+		cout << "false" << endl;
+	}
+
+
+
+
+
+
+
 
 
 }
