@@ -5,6 +5,8 @@
 
 
 #include<iostream>
+#include<string>
+#include<fstream>
 using namespace std;
 
 class Program
@@ -178,7 +180,85 @@ public:
 	friend istream& operator>>(istream& in, Program& p);
 	friend ostream& operator<<(ostream& out, Program p);
 	friend class Programator;
+
+	friend ofstream& operator<<(ofstream& ofs, Program p)
+	{
+		ofs << p.nume << " " << p.stocare << " " << p.nrLimbajeFolosite;
+		for (int i = 0; i < p.nrLimbajeFolosite; i++) {
+			ofs << " " << p.limbajeFolosite[i] << " ";
+		}
+		return ofs;
+	}
+
+	friend ifstream& operator>>(ifstream& ifs, Program& p) {
+		ifs >> p.nume;
+		ifs >> p.stocare;
+		ifs >> p.nrLimbajeFolosite;
+		delete[] p.limbajeFolosite; 
+		p.limbajeFolosite = new string[p.nrLimbajeFolosite];
+		for (int i = 0; i < p.nrLimbajeFolosite; i++) {
+			ifs >> p.limbajeFolosite[i];
+		}
+		return ifs;
+	}
+
+	void scrieFisBinar(const string& numeFisier) {
+		ofstream fisier(numeFisier, ios::binary | ios::out);
+		if (!fisier) {
+			cout << "Eroare la deschiderea fișierului!" << endl;
+			return;
+		}
+		int lungime1 = nume.length() + 1;
+		fisier.write((char*)&lungime1, sizeof(lungime1));
+		fisier.write((char*)nume.c_str(), lungime1);
+		fisier.write((char*)(&stocare), sizeof(stocare));
+		fisier.write((char*)(&nrLimbajeFolosite), sizeof(nrLimbajeFolosite));
+
+		for (int i = 0; i < nrLimbajeFolosite; ++i) {
+			int lungime = limbajeFolosite[i].length();
+			fisier.write((char*)(&lungime), sizeof(lungime));
+			fisier.write(limbajeFolosite[i].c_str(), lungime);
+		}
+
+		fisier.close();
+	}
+
+	void citesteFisBinar(const string& numeFisier) {
+		ifstream fisier(numeFisier, ios::binary | ios::in );
+		if (!fisier) {
+			cout << "Eroare la deschiderea fișierului!" << endl;
+			return;
+		}
+
+		int lungime1;
+		fisier.read((char*)( & lungime1), sizeof(lungime1));
+		char* temp = new char[lungime1 + 1];
+		fisier.read(temp, lungime1);
+		
+		nume = temp;
+		delete[]temp;
+		fisier.read((char*)(&stocare), sizeof(stocare));
+		fisier.read((char*)(&nrLimbajeFolosite), sizeof(nrLimbajeFolosite));
+
+		delete[] limbajeFolosite; 
+		limbajeFolosite = new string[nrLimbajeFolosite];
+		for (int i = 0; i < nrLimbajeFolosite; ++i) {
+			int lungime;
+			fisier.read((char*)(&lungime), sizeof(lungime));
+			char* buffer = new char[lungime + 1];
+			fisier.read(buffer, lungime);
+			buffer[lungime] = '\0';
+			limbajeFolosite[i] = string(buffer);
+			delete[] buffer;
+		}
+
+		fisier.close();
+	}
 };
+	
+
+
+		
 
 istream& operator>>(istream& in, Program& p)
 {
@@ -462,6 +542,68 @@ public:
 		}
 	}
 
+	/*const int numar;
+	static int versiune;
+	string nume;
+	float timpAnalizare;
+	bool esteComplex;
+	int nrDetinatori;
+	string* departamente;*/
+
+	void scrieFisBinar(const string& numeFisier) {
+		ofstream fisier(numeFisier, ios::binary | ios::out);
+		if (!fisier) {
+			cout << "Eroare la deschiderea fișierului!" << endl;
+			return;
+		}
+		int lungime1 = nume.length() + 1;
+		fisier.write((char*)&lungime1, sizeof(lungime1));
+		fisier.write((char*)nume.c_str(), lungime1);
+		fisier.write((char*)(&timpAnalizare), sizeof(timpAnalizare));
+		fisier.write((char*)(&esteComplex), sizeof(esteComplex));
+		fisier.write((char*)(&nrDetinatori), sizeof(nrDetinatori));
+
+		for (int i = 0; i < nrDetinatori; ++i) {
+			int lungime = departamente[i].length();
+			fisier.write((char*)(&lungime), sizeof(lungime));
+			fisier.write(departamente[i].c_str(), lungime);
+		}
+
+		fisier.close();
+	}
+
+	void citesteFisBinar(const string& numeFisier) {
+		ifstream fisier(numeFisier, ios::binary | ios::in);
+		if (!fisier) {
+			cout << "Eroare la deschiderea fișierului!" << endl;
+			return;
+		}
+
+		int lungime1;
+		fisier.read((char*)(&lungime1), sizeof(lungime1));
+		char* temp = new char[lungime1 + 1];
+		fisier.read(temp, lungime1);
+
+		nume = temp;
+		delete[]temp;
+		fisier.read((char*)(&timpAnalizare), sizeof(timpAnalizare));
+		fisier.read((char*)(&esteComplex), sizeof(esteComplex));
+		fisier.read((char*)(&nrDetinatori), sizeof(nrDetinatori));
+
+		delete[] departamente;
+		departamente = new string[nrDetinatori];
+		for (int i = 0; i < nrDetinatori; ++i) {
+			int lungime;
+			fisier.read((char*)(&lungime), sizeof(lungime));
+			char* buffer = new char[lungime + 1];
+			fisier.read(buffer, lungime);
+			buffer[lungime] = '\0';
+			departamente[i] = string(buffer);
+			delete[] buffer;
+		}
+
+		fisier.close();
+	}
 
 };
 
@@ -697,6 +839,32 @@ public:
 	friend istream& operator>>(istream& in, Calculator& c);
 	friend ostream& operator<<(ostream& out, Calculator c);
 	friend class Programator;
+
+	
+
+	friend ofstream& operator<<(ofstream& ofs, Calculator c)
+	{
+		ofs << c.culoare << " " << c.pret << " " <<c.areInternet << " " << c.nrComponente;
+		for (int i = 0; i < c.nrComponente; i++) {
+			ofs << " " << c.componente[i] << " ";
+		}
+		return ofs;
+	}
+
+	friend ifstream& operator>>(ifstream& ifs, Calculator& c) {
+		ifs >> c.culoare;
+		ifs >> c.pret;
+		ifs >> c.areInternet;
+		ifs >> c.nrComponente;
+		delete[] c.componente;
+		c.componente = new string[c.nrComponente];
+		for (int i = 0; i < c.nrComponente; i++) {
+			ifs >> c.componente[i];
+		}
+		return ifs;
+	}
+
+
 
 	bool operator!=(const Calculator& c)
 	{
@@ -1036,6 +1204,22 @@ public:
 	{
 		return this->nrPrograme;
 	}
+	string getProgramNume()
+	{
+		return this->programe->getNume();
+	}
+	float getProgramStocare()
+	{
+		return this-> programe->getStocare();
+	}
+	int getProgramNrLimbaje()
+	{
+		return this->programe->getNrLimbajeFolosite();
+	}
+	string* getProgramLimbaje()
+	{
+		return this->programe->getLimbajeFolosite();
+	}
 	Program* getPrograme()
 	{
 		return this->programe;
@@ -1057,7 +1241,8 @@ public:
 			}
 		}
 	}
-
+	friend class Calculator;
+	friend class Program;
 	friend ostream& operator<<(ostream& out, const Programator& p)
 	{
 		out << "Programatorul cu numele " << p.nume << " detine urmatorul calculator : " << endl << endl;
@@ -1096,6 +1281,28 @@ public:
 
 		return in;
 	}
+	
+
+	 
+
+	friend ifstream& operator>>(ifstream& fin,  Programator& p)
+	{
+		fin >> p.nume ;
+		fin >> p.esteIncepator;
+
+		
+		fin >> p.calculator;
+		
+		
+		fin >> p.nrPrograme;
+		delete[]p.programe;
+		p.programe = new Program[p.nrPrograme];
+		for (int i = 0; i < p.nrPrograme; i++)
+		{
+			fin >> p.programe[i];
+		}
+		return fin;
+	}
 
 	bool operator!=(const Programator& p)
 	{
@@ -1119,6 +1326,36 @@ public:
 
 };
 int Programator::nrProgramatori = 0;
+
+ofstream& operator<<(ofstream& fout, Programator& p)
+{
+	fout << p.getNume() << " ";
+	fout << p.getEsteIncepator() << " " << endl;
+
+
+
+	fout << p.getCalculatorCuloare() << " " << p.getCalculatorPret() << " " << p.getCalculatorAreInternet() << " " << p.getCalculatorNrComponente();
+	for (int i = 0; i < p.getCalculatorNrComponente(); i++) {
+		fout << " " << p.getCalculatorComponente()[i] << " ";
+	}
+
+
+	fout << endl << p.getNrPrograme() << " ";
+	for (int i = 0; i < p.getNrPrograme(); i++)
+	{
+		
+		fout << p.getPrograme()[i];
+		
+	}
+	return fout;
+}
+
+/*const int id;
+	static string corporatie;
+	string nume;
+	float stocare;
+	int nrLimbajeFolosite;
+	string* limbajeFolosite;*/
 
 int main()
 {
@@ -1415,7 +1652,7 @@ int main()
 		delete[]antivirusMAT;*/
 
 
-	string* componente = new string[4]{ "Placa_Video","RAM","Proc_Intel","Placa_sunet" };
+	/*string* componente = new string[4]{ "Placa_Video","RAM","Proc_Intel","Placa_sunet" };
 	Calculator c1(16, "Roz", 15000, true, 4, componente);
 	Program* programe = new Program[2];
 	cin>>programe[0];
@@ -1509,12 +1746,74 @@ int main()
 	else
 	{
 		cout << "false" << endl;
-	}
+	}*/
 
 
 
+						//faza 6
 
 
+	///*string* limbaje = new string[2]{ " Java " , " C# " };
+	//Program p10(10, "Gephy", 199, 2, limbaje);
+
+	//ofstream fisout("fis.txt", ios::out);
+	//fisout << p10;
+	//fisout.close();
+
+	//ifstream fisin("fis.txt", ios::in);
+	//Program p11;
+	//fisin >> p11;
+	//cout << p11;
+	//fisin.close();
+
+	//
+
+	//ofstream fisout("fis2.txt", ios::out);
+	//string* componente = new string[3]{ "Ecran","Monitor","Sursa" };
+	//Calculator c10(10, "Rosu", 1965, true, 3, componente);
+	//fisout << c10;
+	//fisout.close();
+
+	//ifstream fisin("fis2.txt", ios::in);
+	//Calculator c11;
+	//fisin >> c11;
+	//cout << c11;*/
+
+	///*string* componente = new string[4]{ "Placa_Video","RAM","Proc_Intel","Placa_sunet" };
+	//Calculator c1(16, "Roz", 15000, true, 4, componente);
+	//string* limbaje = new string[2]{ "C++", "C#"};
+	//Program* programe = new Program[2];
+	//cin >> programe[0];
+	//cin >> programe[1];
+
+	//Programator pr10("Andrei", true, c1, 2, programe);
+	//ofstream fisout("fis3.txt", ios::out);
+	//fisout << pr10;
+	//fisout.close();*/
+	//
+
+	///*Programator pr11;
+	//ifstream fisin("fis3.txt", ios::in);
+	//fisin >> pr11;
+	//cout << pr11;*/
+
+	///*string* limbaje = new string[3]{ "C++", "C#","Python"};
+	//Program p5(10, "Trojan", 345, 3, limbaje);
+	//p5.scrieFisBinar("fis4.bin");
+	//Program p6;
+	//p6.citesteFisBinar("fis4.bin");
+	//cout << p6;*/
+
+	///*string* departamente = new string[2]{ "Logistica","Front_End" };
+	//Antivirus a10(10, "Hero", 11.5, true, 2, departamente);
+	//a10.scrieFisBinar("fis5.bin");*/
+
+
+	///*Antivirus a5;
+	//a5.citesteFisBinar("fis5.bin");
+	//cout << a5;*/
+
+	
 
 
 
