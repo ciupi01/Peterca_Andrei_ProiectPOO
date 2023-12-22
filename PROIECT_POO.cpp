@@ -194,7 +194,7 @@ public:
 		ifs >> p.nume;
 		ifs >> p.stocare;
 		ifs >> p.nrLimbajeFolosite;
-		delete[] p.limbajeFolosite; 
+		delete[] p.limbajeFolosite;
 		p.limbajeFolosite = new string[p.nrLimbajeFolosite];
 		for (int i = 0; i < p.nrLimbajeFolosite; i++) {
 			ifs >> p.limbajeFolosite[i];
@@ -224,23 +224,23 @@ public:
 	}
 
 	void citesteFisBinar(const string& numeFisier) {
-		ifstream fisier(numeFisier, ios::binary | ios::in );
+		ifstream fisier(numeFisier, ios::binary | ios::in);
 		if (!fisier) {
 			cout << "Eroare la deschiderea fișierului!" << endl;
 			return;
 		}
 
 		int lungime1;
-		fisier.read((char*)( & lungime1), sizeof(lungime1));
+		fisier.read((char*)(&lungime1), sizeof(lungime1));
 		char* temp = new char[lungime1 + 1];
 		fisier.read(temp, lungime1);
-		
+
 		nume = temp;
 		delete[]temp;
 		fisier.read((char*)(&stocare), sizeof(stocare));
 		fisier.read((char*)(&nrLimbajeFolosite), sizeof(nrLimbajeFolosite));
 
-		delete[] limbajeFolosite; 
+		delete[] limbajeFolosite;
 		limbajeFolosite = new string[nrLimbajeFolosite];
 		for (int i = 0; i < nrLimbajeFolosite; ++i) {
 			int lungime;
@@ -254,12 +254,12 @@ public:
 
 		fisier.close();
 	}
+
+	virtual void metoda()
+	{
+		cout << "Acesta este un simplu program";
+	}
 };
-	
-
-
-		
-
 istream& operator>>(istream& in, Program& p)
 {
 	cout << " \nNume:";
@@ -542,13 +542,7 @@ public:
 		}
 	}
 
-	/*const int numar;
-	static int versiune;
-	string nume;
-	float timpAnalizare;
-	bool esteComplex;
-	int nrDetinatori;
-	string* departamente;*/
+	
 
 	void scrieFisBinar(const string& numeFisier) {
 		ofstream fisier(numeFisier, ios::binary | ios::out);
@@ -840,11 +834,11 @@ public:
 	friend ostream& operator<<(ostream& out, Calculator c);
 	friend class Programator;
 
-	
+
 
 	friend ofstream& operator<<(ofstream& ofs, Calculator c)
 	{
-		ofs << c.culoare << " " << c.pret << " " <<c.areInternet << " " << c.nrComponente;
+		ofs << c.culoare << " " << c.pret << " " << c.areInternet << " " << c.nrComponente;
 		for (int i = 0; i < c.nrComponente; i++) {
 			ofs << " " << c.componente[i] << " ";
 		}
@@ -933,7 +927,10 @@ public:
 		}
 		return aux;
 	}
-
+	virtual void metoda()
+	{
+		cout << "Acesta este un simplu calculator";
+	}
 };
 int Calculator::driver(2023);
 
@@ -988,6 +985,184 @@ ostream& operator<<(ostream& out, const Calculator c)
 	cout << endl;
 	return out;
 }
+
+
+
+class CalculatorGaming :public Calculator
+{private:
+	bool iluminareRGB;
+	int nrVentilatoare;
+	float temperaturaSuportata;
+	int* vitezeVentilatoare;
+
+public:
+
+	CalculatorGaming() : Calculator()
+	{
+		this->iluminareRGB = false;
+		this->nrVentilatoare = 3;
+		this->temperaturaSuportata = 80.6;
+		this->vitezeVentilatoare = new int[nrVentilatoare];
+		for(int i = 0 ; i<nrVentilatoare;i++)
+		{
+			this->vitezeVentilatoare[i] = 150;
+		}
+	}
+
+	CalculatorGaming(bool iluminareRGB, int nrVentilatoare, float temperaturaSuportata,int* vitezeVentilatoare) : Calculator()
+	{
+		this->iluminareRGB = iluminareRGB;
+		this->nrVentilatoare = nrVentilatoare;
+		this->temperaturaSuportata = temperaturaSuportata;
+		this->vitezeVentilatoare = new int[this->nrVentilatoare];
+		for (int i = 0; i < nrVentilatoare; i++)
+		{
+			this->vitezeVentilatoare[i] = vitezeVentilatoare[i];
+		}
+
+	}
+
+	CalculatorGaming(bool iluminareRGB, int nrVentilatoare, float temperaturaSuportata, int* vitezeVentilatoare , string culoare, float pret, bool areInternet, int nrComponente, string* componente) :Calculator(199, culoare, pret, areInternet, nrComponente, componente)
+	{
+		this->iluminareRGB = iluminareRGB;
+		this->nrVentilatoare = nrVentilatoare;
+		this->temperaturaSuportata = temperaturaSuportata;
+		this->vitezeVentilatoare = new int[this->nrVentilatoare];
+		for (int i = 0; i < nrVentilatoare; i++)
+		{
+			this->vitezeVentilatoare[i] = vitezeVentilatoare[i];
+		}
+	}
+	
+	CalculatorGaming(const CalculatorGaming& cg) : Calculator(cg)
+	{
+		this->iluminareRGB = cg.iluminareRGB;
+		this->nrVentilatoare = cg.nrVentilatoare;
+		this->temperaturaSuportata = cg.temperaturaSuportata;
+		this->vitezeVentilatoare = new int[this->nrVentilatoare];
+		for (int i = 0; i < nrVentilatoare; i++)
+		{
+			this->vitezeVentilatoare[i] = cg.vitezeVentilatoare[i];
+		}
+	}
+
+	 CalculatorGaming& operator=(const CalculatorGaming& cg)
+	{
+		if (this != &cg)
+		{
+			Calculator::operator=(cg);
+			this->iluminareRGB = cg.iluminareRGB;
+			this->nrVentilatoare = cg.nrVentilatoare;
+			this->temperaturaSuportata = cg.temperaturaSuportata;
+			if (this->vitezeVentilatoare != NULL)
+			{
+				delete[]this->vitezeVentilatoare;
+				this->vitezeVentilatoare = new int[cg.nrVentilatoare];
+				for (int i = 0; i < cg.nrVentilatoare; i++)
+				{
+					this->vitezeVentilatoare[i] = cg.vitezeVentilatoare[i];
+				}
+			}
+		}
+		return *this;
+	}
+
+	 friend ostream& operator<<(ostream& out, const CalculatorGaming cg)
+	 {
+		 out << (Calculator)cg;
+		 out << endl;
+		 out << " Temperatura suportata este de " << cg.temperaturaSuportata << " grade" << endl;
+		 (cg.iluminareRGB == true) ? (out << " Este iluminat RGB, ") : (out << "Nu este iluminat RGB, ");
+		 out << " contine " << cg.nrVentilatoare << " ventilatoare, acestea avand vitezele de: "<<endl;
+		 for (int i = 0; i < cg.nrVentilatoare; i++)
+		 {
+			 out << i + 1 << ". " << cg.vitezeVentilatoare[i] <<" RPM " << endl;
+		 }
+
+		 return out;
+
+	 }
+
+	 friend istream& operator>>(istream& in, CalculatorGaming& cg)
+	 {
+		 in >> (Calculator&)cg;
+		 cout << " Are iluminare RGB? (0-nu / 1-da) : ";
+		 in >> cg.iluminareRGB;
+		 cout << " Temperatura suportata : ";
+		 in >> cg.temperaturaSuportata;
+		 cout << " Nr ventialtoare : ";
+		 in >> cg.nrVentilatoare;
+		 if (cg.vitezeVentilatoare != NULL)
+		 {
+			 delete[]cg.vitezeVentilatoare;
+			 cg.vitezeVentilatoare = new int[cg.nrVentilatoare];
+			 for (int i = 0; i < cg.nrVentilatoare; i++)
+			 {
+				 cout << " Viteza ventilator " << i + 1 << " : ";
+				 in>>cg.vitezeVentilatoare[i];
+			 }
+		 }
+
+		 return in;
+	 }
+	 ~CalculatorGaming()
+	 {
+		 delete[]this->vitezeVentilatoare;
+	 }
+
+	 bool getIluminareRGB()
+	 {
+		 return this->iluminareRGB;
+	 }
+
+	 void setIluminareRGB(bool iluminareRGB)
+	 {		
+		 this->iluminareRGB = iluminareRGB;
+	 }
+
+	 int getNrVentilatoare()
+	 {	
+		 return this->nrVentilatoare;
+	 }
+
+	 int* getVitezeVentilatoare()
+	 {	
+		 return this->vitezeVentilatoare;
+	 }
+
+	 void setVentilatoare(int nrVentilatoare, int* vitezeVentilatoare)
+	 {
+		 if (nrVentilatoare > 0)
+		 {
+			 this->nrVentilatoare = nrVentilatoare;
+			 if (this->vitezeVentilatoare != NULL)
+			 {
+				 delete[]this->vitezeVentilatoare;
+				 this->vitezeVentilatoare = new int[nrVentilatoare];
+				 for (int i = 0; i < nrVentilatoare; i++)
+				 {
+					 this->vitezeVentilatoare[i] = vitezeVentilatoare[i];
+				 }
+			 }
+		 }
+	 }
+
+	 float getTemperaturaSuportata()
+	 {
+		 return this->temperaturaSuportata;
+	 }
+	 void setTemperaturaSuportata(float temperaturaSuportata)
+	 {
+		 this->temperaturaSuportata = temperaturaSuportata;
+	 }
+
+	 void metoda()
+	 {
+		 cout << "Acesta este un calculator de gaming";
+	 }
+
+
+};
 
 class Programator
 {
@@ -1210,7 +1385,7 @@ public:
 	}
 	float getProgramStocare()
 	{
-		return this-> programe->getStocare();
+		return this->programe->getStocare();
 	}
 	int getProgramNrLimbaje()
 	{
@@ -1281,19 +1456,19 @@ public:
 
 		return in;
 	}
-	
 
-	 
 
-	friend ifstream& operator>>(ifstream& fin,  Programator& p)
+
+
+	friend ifstream& operator>>(ifstream& fin, Programator& p)
 	{
-		fin >> p.nume ;
+		fin >> p.nume;
 		fin >> p.esteIncepator;
 
-		
+
 		fin >> p.calculator;
-		
-		
+
+
 		fin >> p.nrPrograme;
 		delete[]p.programe;
 		p.programe = new Program[p.nrPrograme];
@@ -1343,20 +1518,173 @@ ofstream& operator<<(ofstream& fout, Programator& p)
 	fout << endl << p.getNrPrograme() << " ";
 	for (int i = 0; i < p.getNrPrograme(); i++)
 	{
-		
+
 		fout << p.getPrograme()[i];
-		
+
 	}
 	return fout;
 }
 
-/*const int id;
-	static string corporatie;
-	string nume;
-	float stocare;
-	int nrLimbajeFolosite;
-	string* limbajeFolosite;*/
 
+class AplicatieMobil : public Program
+{
+private:
+	string sistemOperare;
+	int numarDescarcari;
+	float dimensiuneDescarcare;
+	string* dispozitiveTestate;
+public:
+
+	AplicatieMobil() : Program("Default Mobile-App", 100)
+	{
+		this->sistemOperare = " Android";
+		this->numarDescarcari = 0;
+		this->dimensiuneDescarcare = 100;
+		this->dispozitiveTestate = NULL;
+	}
+
+	AplicatieMobil(string nume, string sistemOperare, int numarDescarcari, float dimensiuneDescarcare,string* dispozitiveTestate) : Program(nume,dimensiuneDescarcare)
+	{
+		this->sistemOperare = sistemOperare;
+		this->numarDescarcari = numarDescarcari;
+		this->dimensiuneDescarcare = dimensiuneDescarcare;
+		this->dispozitiveTestate = new string[numarDescarcari];
+		for (int i = 0; i < numarDescarcari; i++)
+		{
+			this->dispozitiveTestate[i] = dispozitiveTestate[i];
+		}
+	}
+
+	AplicatieMobil(const AplicatieMobil& am) : Program(am)
+	{
+		this->sistemOperare = am.sistemOperare;
+		this->numarDescarcari = am.numarDescarcari;
+		this->dimensiuneDescarcare = am.dimensiuneDescarcare;
+		this->dispozitiveTestate = new string[am.numarDescarcari];
+		for (int i = 0; i < am.numarDescarcari; i++)
+		{
+			this->dispozitiveTestate[i] = am.dispozitiveTestate[i];
+		}
+	}
+
+	~AplicatieMobil()
+	{
+		delete[]this->dispozitiveTestate;
+	}
+
+	AplicatieMobil& operator=(const AplicatieMobil& am)
+	{
+		if (this != &am)
+		{
+			Program::operator=(am);
+			this->sistemOperare = am.sistemOperare;
+			this->numarDescarcari = am.numarDescarcari;
+			this->dimensiuneDescarcare = am.dimensiuneDescarcare;
+			if (this->dispozitiveTestate != NULL)
+			{
+				delete[]this->dispozitiveTestate;
+			}
+				this->dispozitiveTestate = new string[am.numarDescarcari];
+				for (int i = 0; i < am.numarDescarcari; i++)
+				{
+					this->dispozitiveTestate[i] = am.dispozitiveTestate[i];
+				}
+			
+		}
+		return *this;
+	}
+	
+
+	string getSistemOperare()
+	{
+		return this->sistemOperare;
+	}
+	void setSistemOperare(string sistemOperare)
+	{
+		this->sistemOperare = sistemOperare;
+	}
+
+	float getDimensiuneDescarcare()
+	{
+		return this->dimensiuneDescarcare;
+	}
+	void setDimensiuneDescarcare(float dimensiuneDescarcare)
+	{
+		if (dimensiuneDescarcare >= 0)
+		{
+			this->dimensiuneDescarcare = dimensiuneDescarcare;
+		}
+	}
+
+	int getNumarDescarcari()
+	{
+		return this->numarDescarcari;
+	}
+	string* getDispozitiveTestate()
+	{
+		return this->dispozitiveTestate;
+	}
+	void setDispozitiveTestate(int numarDescarcari, string* dispozitiveTestate)
+	{
+		if (numarDescarcari >= 0)
+		{
+			this->numarDescarcari = numarDescarcari;
+			if (this->dispozitiveTestate != NULL)
+			{
+				delete[]this->dispozitiveTestate;
+				this->dispozitiveTestate = new string[numarDescarcari];
+				for (int i = 0; i < numarDescarcari; i++)
+				{
+					this->dispozitiveTestate[i] = dispozitiveTestate[i];
+				}
+			}
+		}
+	}
+
+
+	
+	friend ostream& operator<<(ostream& out, AplicatieMobil am)
+	{
+		out << (Program)am;
+		out << endl;
+		out << " De asemenea, prezinta sistemul de operare " << am.sistemOperare << " , " << am.numarDescarcari << " descarcari." << endl;
+		out << " Are dimensiunea descarcarii de " << am.dimensiuneDescarcare << " MB, iar dispozitivele pe care a fost testata aplicatia sunt: "<<endl;
+		for (int i = 0; i < am.numarDescarcari; i++)
+		{
+			out << "Dispozitivul " << i + 1 << " : " << am.dispozitiveTestate[i]<<endl;
+		}
+		return out;
+	}
+
+	friend istream& operator>>(istream& in, AplicatieMobil& am)
+	{
+		in >> (Program&)am;
+		cout << endl << " Sistem de operare : ";
+		in >> am.sistemOperare;
+		cout << " Numar Descarcari : ";
+		in >> am.numarDescarcari;
+		cout << "Dimensiune Descarcare : ";
+		in >> am.dimensiuneDescarcare;
+		if (am.dispozitiveTestate != NULL)
+		{
+			delete[]am.dispozitiveTestate;
+		}
+			am.dispozitiveTestate = new string[am.numarDescarcari];
+			for (int i = 0; i < am.numarDescarcari; i++)
+			{
+				cout << "Dispozitivul " << i + 1 << " : "; 
+				in >> am.dispozitiveTestate[i];
+			}
+		
+		return in;
+	}
+
+	void metoda() 
+	{
+		cout << " Aceasta este o aplicatie pentru telefon";
+	}
+
+};
 int main()
 {
 	/*Program program1;
@@ -1652,170 +1980,235 @@ int main()
 		delete[]antivirusMAT;*/
 
 
-	/*string* componente = new string[4]{ "Placa_Video","RAM","Proc_Intel","Placa_sunet" };
-	Calculator c1(16, "Roz", 15000, true, 4, componente);
-	Program* programe = new Program[2];
-	cin>>programe[0];
-	cin>>programe[1];
+		/*string* componente = new string[4]{ "Placa_Video","RAM","Proc_Intel","Placa_sunet" };
+		Calculator c1(16, "Roz", 15000, true, 4, componente);
+		Program* programe = new Program[2];
+		cin>>programe[0];
+		cin>>programe[1];
 
-	Programator p1("Andrei", true, c1, 2, programe);
-	Programator p2(p1);
-	cout << p2;
+		Programator p1("Andrei", true, c1, 2, programe);
+		Programator p2(p1);
+		cout << p2;
 
-	Programator p3;
-	cin >> p3;
-	cout << p3;
+		Programator p3;
+		cin >> p3;
+		cout << p3;
 
-	cout << "Programatorul cu numele " << p1.getNume() << " detine urmatorul calculator : " << endl << endl;
-	cout << p1.getCalculatorCuloare()<<endl<<p1.getCalculatorPret()<<endl<<p1.getCalculatorAreInternet()<<endl<<p1.getCalculatorNrComponente()<<endl << endl;
-	for (int i = 0; i < p1.getCalculatorNrComponente(); i++)
-	{
-		cout << *(p1.getCalculatorComponente() + i) << endl;
-	}
-	(p1.getEsteIncepator() == true) ? (cout << "De asemenea, el este incepator, ") : (cout << "De asemenea, el nu este incepator,  ");
-	cout << " este cunoscator de " << p1.getNrPrograme() << " programe, acestea fiind " << endl;
-	for (int i = 0; i < p1.getNrPrograme(); i++)
-	{
-		cout << "Programul " << i + 1 << ". " << endl;
-		cout <<p1.getPrograme()[i] << endl;
-	}
-	cout << " Exista in corporatie " << p1.getNrProgramatori() << " programatori activi";
-
-
-
-	p1.setNume("Costel");
-	p1.setCalculatorCuloare("VERNIL");
-	p1.setCalculatorPret(666);
-	p1.setCalculatorAreInternet(true);
-
-	string* componente1 = new string[1]{"COMPONENTA"};
-
-	p1.setCalculatorComponente(1,componente1) ;
-
-	p1.setEsteIncepator(false);
-	Program* programeNoi = new Program[1];
-	cin>>programeNoi[0];
-	p1.setPrograme(1,programeNoi);
+		cout << "Programatorul cu numele " << p1.getNume() << " detine urmatorul calculator : " << endl << endl;
+		cout << p1.getCalculatorCuloare()<<endl<<p1.getCalculatorPret()<<endl<<p1.getCalculatorAreInternet()<<endl<<p1.getCalculatorNrComponente()<<endl << endl;
+		for (int i = 0; i < p1.getCalculatorNrComponente(); i++)
+		{
+			cout << *(p1.getCalculatorComponente() + i) << endl;
+		}
+		(p1.getEsteIncepator() == true) ? (cout << "De asemenea, el este incepator, ") : (cout << "De asemenea, el nu este incepator,  ");
+		cout << " este cunoscator de " << p1.getNrPrograme() << " programe, acestea fiind " << endl;
+		for (int i = 0; i < p1.getNrPrograme(); i++)
+		{
+			cout << "Programul " << i + 1 << ". " << endl;
+			cout <<p1.getPrograme()[i] << endl;
+		}
+		cout << " Exista in corporatie " << p1.getNrProgramatori() << " programatori activi";
 
 
+
+		p1.setNume("Costel");
+		p1.setCalculatorCuloare("VERNIL");
+		p1.setCalculatorPret(666);
+		p1.setCalculatorAreInternet(true);
+
+		string* componente1 = new string[1]{"COMPONENTA"};
+
+		p1.setCalculatorComponente(1,componente1) ;
+
+		p1.setEsteIncepator(false);
+		Program* programeNoi = new Program[1];
+		cin>>programeNoi[0];
+		p1.setPrograme(1,programeNoi);
 
 
 
 
-	cout << "Programatorul cu numele " << p1.getNume() << " detine urmatorul calculator : " << endl << endl;
-	cout << p1.getCalculatorCuloare() << endl << p1.getCalculatorPret() << endl << p1.getCalculatorAreInternet() << endl << p1.getCalculatorNrComponente() << endl << endl;
-	for (int i = 0; i < p1.getCalculatorNrComponente(); i++)
-	{
-		cout << *(p1.getCalculatorComponente() + i) << endl;
-	}
-	(p1.getEsteIncepator() == true) ? (cout << "De asemenea, el este incepator, ") : (cout << "De asemenea, el nu este incepator,  ");
-	cout << " este cunoscator de " << p1.getNrPrograme() << " programe, acestea fiind " << endl;
-	for (int i = 0; i < p1.getNrPrograme(); i++)
-	{
-		cout << "Programul " << i + 1 << ". " << endl;
-		cout << p1.getPrograme()[i] << endl;
-	}
-	cout << " Exista in corporatie " << p1.getNrProgramatori() << " programatori activi";
-
-	Programator p4;
-	cin >> p4;
-	Programator p5;
-	p5 = p4;
-	cout << p5;
-
-	if (p1 == p2)
-	{
-		cout<<"adevarat"<<endl;
-	}
-	else
-	{
-		cout<<"false" << endl;
-	}
-	if (p1 != p2)
-	{
-		cout << "adevarat" << endl;
-	}
-	else
-	{
-		cout << "false" << endl;
-	}
-	if (p1 <= p2)
-	{
-		cout << "adevarat"<<endl;
-	}
-	else
-	{
-		cout << "false" << endl;
-	}*/
 
 
+		cout << "Programatorul cu numele " << p1.getNume() << " detine urmatorul calculator : " << endl << endl;
+		cout << p1.getCalculatorCuloare() << endl << p1.getCalculatorPret() << endl << p1.getCalculatorAreInternet() << endl << p1.getCalculatorNrComponente() << endl << endl;
+		for (int i = 0; i < p1.getCalculatorNrComponente(); i++)
+		{
+			cout << *(p1.getCalculatorComponente() + i) << endl;
+		}
+		(p1.getEsteIncepator() == true) ? (cout << "De asemenea, el este incepator, ") : (cout << "De asemenea, el nu este incepator,  ");
+		cout << " este cunoscator de " << p1.getNrPrograme() << " programe, acestea fiind " << endl;
+		for (int i = 0; i < p1.getNrPrograme(); i++)
+		{
+			cout << "Programul " << i + 1 << ". " << endl;
+			cout << p1.getPrograme()[i] << endl;
+		}
+		cout << " Exista in corporatie " << p1.getNrProgramatori() << " programatori activi";
 
-						//faza 6
+		Programator p4;
+		cin >> p4;
+		Programator p5;
+		p5 = p4;
+		cout << p5;
+
+		if (p1 == p2)
+		{
+			cout<<"adevarat"<<endl;
+		}
+		else
+		{
+			cout<<"false" << endl;
+		}
+		if (p1 != p2)
+		{
+			cout << "adevarat" << endl;
+		}
+		else
+		{
+			cout << "false" << endl;
+		}
+		if (p1 <= p2)
+		{
+			cout << "adevarat"<<endl;
+		}
+		else
+		{
+			cout << "false" << endl;
+		}*/
 
 
-	///*string* limbaje = new string[2]{ " Java " , " C# " };
-	//Program p10(10, "Gephy", 199, 2, limbaje);
 
-	//ofstream fisout("fis.txt", ios::out);
-	//fisout << p10;
-	//fisout.close();
+		//faza 6
 
-	//ifstream fisin("fis.txt", ios::in);
-	//Program p11;
-	//fisin >> p11;
-	//cout << p11;
-	//fisin.close();
 
+///*string* limbaje = new string[2]{ " Java " , " C# " };
+//Program p10(10, "Gephy", 199, 2, limbaje);
+
+//ofstream fisout("fis.txt", ios::out);
+//fisout << p10;
+//fisout.close();
+
+//ifstream fisin("fis.txt", ios::in);
+//Program p11;
+//fisin >> p11;
+//cout << p11;
+//fisin.close();
+
+//
+
+//ofstream fisout("fis2.txt", ios::out);
+//string* componente = new string[3]{ "Ecran","Monitor","Sursa" };
+//Calculator c10(10, "Rosu", 1965, true, 3, componente);
+//fisout << c10;
+//fisout.close();
+
+//ifstream fisin("fis2.txt", ios::in);
+//Calculator c11;
+//fisin >> c11;
+//cout << c11;*/
+
+///*string* componente = new string[4]{ "Placa_Video","RAM","Proc_Intel","Placa_sunet" };
+//Calculator c1(16, "Roz", 15000, true, 4, componente);
+//string* limbaje = new string[2]{ "C++", "C#"};
+//Program* programe = new Program[2];
+//cin >> programe[0];
+//cin >> programe[1];
+
+//Programator pr10("Andrei", true, c1, 2, programe);
+//ofstream fisout("fis3.txt", ios::out);
+//fisout << pr10;
+//fisout.close();*/
+//
+
+///*Programator pr11;
+//ifstream fisin("fis3.txt", ios::in);
+//fisin >> pr11;
+//cout << pr11;*/
+
+///*string* limbaje = new string[3]{ "C++", "C#","Python"};
+//Program p5(10, "Trojan", 345, 3, limbaje);
+//p5.scrieFisBinar("fis4.bin");
+//Program p6;
+//p6.citesteFisBinar("fis4.bin");
+//cout << p6;*/
+
+///*string* departamente = new string[2]{ "Logistica","Front_End" };
+//Antivirus a10(10, "Hero", 11.5, true, 2, departamente);
+//a10.scrieFisBinar("fis5.bin");*/
+
+
+///*Antivirus a5;
+//a5.citesteFisBinar("fis5.bin");
+//cout << a5;*/
+
+
+	//faza 7
+	///*int* vitezeVentilatoare = new int[3] {123, 321, 666};
+	//CalculatorGaming cg1(false, 3, 150, vitezeVentilatoare);
+	//cout << cg1;
+	//CalculatorGaming cg2(cg1);
+	//cg2.setTemperaturaSuportata(151);
+	//cg2.setIluminareRGB(true);
+	//cout << cg2;
+	//CalculatorGaming cg3;
+	//cin >> cg3;
+	//cout << cg3;
+
+	//CalculatorGaming cg4;
+	//cg4 = cg3;
+	//cout << cg4;
+
+	//cout << " Calculatorul pentru gaming ";
+	//(cg4.getIluminareRGB() == true) ? (cout << "are ") : (cout << "nu are ");
+	//cout << "iluminare RGB" << endl;
+	//cout << "Calculatorul are " << cg4.getNrVentilatoare() << " ventilatoare, acestea avand viteze de ";
+	//for (int i = 0; i < cg4.getNrVentilatoare(); i++)
+	//{
+	//	cout << " " << *(cg4.getVitezeVentilatoare() + i) << "RPM "<< " ";
+	//}
+	//cout << endl << " si suporta temperatura de " << cg4.getTemperaturaSuportata()<<endl<<endl;*/
+
+
+
+	///*string* dispozitiveTestate = new string[3]{ "S23_Ultra"," Huawei_Honor_15", "A20+" };
+	//AplicatieMobil am1("TicTacToe", "Android", 3, 199, dispozitiveTestate);
+	//cout << am1;
 	//
-
-	//ofstream fisout("fis2.txt", ios::out);
-	//string* componente = new string[3]{ "Ecran","Monitor","Sursa" };
-	//Calculator c10(10, "Rosu", 1965, true, 3, componente);
-	//fisout << c10;
-	//fisout.close();
-
-	//ifstream fisin("fis2.txt", ios::in);
-	//Calculator c11;
-	//fisin >> c11;
-	//cout << c11;*/
-
-	///*string* componente = new string[4]{ "Placa_Video","RAM","Proc_Intel","Placa_sunet" };
-	//Calculator c1(16, "Roz", 15000, true, 4, componente);
-	//string* limbaje = new string[2]{ "C++", "C#"};
-	//Program* programe = new Program[2];
-	//cin >> programe[0];
-	//cin >> programe[1];
-
-	//Programator pr10("Andrei", true, c1, 2, programe);
-	//ofstream fisout("fis3.txt", ios::out);
-	//fisout << pr10;
-	//fisout.close();*/
+	//AplicatieMobil am2(am1);
+	//am2.setSistemOperare("IOS");
+	//am2.setDimensiuneDescarcare(200);
+	//cout << am2;
 	//
+	//AplicatieMobil am3;
+	//am3 = am2;
+	//string* dispozitivetestate2 = new string[2]{ "Iphone_15","Iphone_14_PRO" };
+	//am3.setDispozitiveTestate(2, dispozitivetestate2);
+	//cout << am3;
 
-	///*Programator pr11;
-	//ifstream fisin("fis3.txt", ios::in);
-	//fisin >> pr11;
-	//cout << pr11;*/
+	//AplicatieMobil am4;
+	//cin >> am4;
+	//cout << am4;
 
-	///*string* limbaje = new string[3]{ "C++", "C#","Python"};
-	//Program p5(10, "Trojan", 345, 3, limbaje);
-	//p5.scrieFisBinar("fis4.bin");
-	//Program p6;
-	//p6.citesteFisBinar("fis4.bin");
-	//cout << p6;*/
+	//cout << endl << " Aplicatia are " << am4.getNumarDescarcari() << " descarcari, foloseste sistem de operare " << am4.getSistemOperare() << " , prezinta o dimensiune de descarcare de " << am4.getDimensiuneDescarcare() << " iar dispozitivele pe care a fost testata aplicatia sunt : ";
+	//for (int i = 0; i < am4.getNumarDescarcari(); i++)
+	//{
+	//	cout << " " << *(am4.getDispozitiveTestate() + i) << " ";
 
-	///*string* departamente = new string[2]{ "Logistica","Front_End" };
-	//Antivirus a10(10, "Hero", 11.5, true, 2, departamente);
-	//a10.scrieFisBinar("fis5.bin");*/
+	//}*/
+	//
+	///*Program programobj;
+	//programobj.metoda();
+	//cout << endl;
 
+	//Program* programp = new AplicatieMobil();
+	//programp->metoda();
+	//cout << endl;
 
-	///*Antivirus a5;
-	//a5.citesteFisBinar("fis5.bin");
-	//cout << a5;*/
+	//Calculator calculatorobj;
+	//calculatorobj.metoda();
+	//cout << endl;
 
-	
-
-
-
+	//Calculator* calculatorp = new CalculatorGaming();
+	//calculatorp->metoda();*/
 
 }
