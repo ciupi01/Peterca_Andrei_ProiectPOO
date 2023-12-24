@@ -1,15 +1,28 @@
 //PETERCA ANDREI GRUPA 1049
 //PROGRAM, ANTIVIRUS, CALCULATOR
 
-
-
+//Imi cer scuze pentru incarcarile tarzii ale catorva faze din proiect.
+//--
+// Proasta gestiune a timpului m-a impiedicat din a le posta la timp. Am incercat sa le postez cat mai rapid cu putinta.
+//--
+//Pentru implementarea fazei 8 in clasa "has-a". Pentru clasa mea,
+//  "Programator" am incercat sa pastrez ideea originala . "Programatorul are UN SINGUR calculator si MAI MULTE programe."
 
 #include<iostream>
 #include<string>
 #include<fstream>
+#include<stdlib.h>
+#include <dos.h>
 using namespace std;
 
-class Program
+class Actualizabil
+{
+public:
+	virtual void verificaActualizari() = 0;
+	virtual void aplicaActualizari() = 0;
+};
+
+class Program : public Actualizabil
 {
 private:
 	const int id;
@@ -20,6 +33,17 @@ private:
 	string* limbajeFolosite;
 
 public:
+
+	void verificaActualizari()
+	{
+		cout << "Se verifica daca programul necesita actualziari...";
+	}
+
+	void aplicaActualizari()
+	{
+		cout << " Actualizari au fost aplicate cu succes programului!";
+	}
+
 	Program() :id(0)
 	{
 		this->nume = "NoName";
@@ -542,7 +566,7 @@ public:
 		}
 	}
 
-	
+
 
 	void scrieFisBinar(const string& numeFisier) {
 		ofstream fisier(numeFisier, ios::binary | ios::out);
@@ -660,7 +684,14 @@ float conversieMinToHr(Antivirus a)
 	return a.timpAnalizare / 60;
 }
 
-class Calculator
+class DispozitivElectronic
+{
+public:
+	virtual void porneste() = 0;
+	virtual void opreste() = 0;
+};
+
+class Calculator:public DispozitivElectronic
 {
 private:
 	const int id;
@@ -897,7 +928,7 @@ public:
 	}
 
 
-	Calculator operator+(const Calculator& c)
+	Calculator	operator+(const Calculator& c)
 	{
 		Calculator aux;
 		aux.culoare = this->culoare;
@@ -930,6 +961,18 @@ public:
 	virtual void metoda()
 	{
 		cout << "Acesta este un simplu calculator";
+	}
+
+	void porneste()
+	{
+		cout << "Se porneste calculatorul...";
+		cout << " Calculatorul a fost pornit cu succes";
+	}
+
+	void opreste()
+	{
+		cout << " Se opreste calculatorul...";
+		cout << " Calculatorul a fost oprit cu succes";
 	}
 };
 int Calculator::driver(2023);
@@ -989,7 +1032,8 @@ ostream& operator<<(ostream& out, const Calculator c)
 
 
 class CalculatorGaming :public Calculator
-{private:
+{
+private:
 	bool iluminareRGB;
 	int nrVentilatoare;
 	float temperaturaSuportata;
@@ -997,19 +1041,31 @@ class CalculatorGaming :public Calculator
 
 public:
 
+	void porneste()
+	{
+		cout << "Se porneste calculatorul de gaming...";
+		cout << " Calculatorul de gaming a fost pornit cu succes";
+	}
+
+	void opreste()
+	{
+		cout << " Se opreste calculatorul de gaming...";
+		cout << " Calculatorul de gaming a fost oprit cu succes";
+	}
+
 	CalculatorGaming() : Calculator()
 	{
 		this->iluminareRGB = false;
 		this->nrVentilatoare = 3;
 		this->temperaturaSuportata = 80.6;
 		this->vitezeVentilatoare = new int[nrVentilatoare];
-		for(int i = 0 ; i<nrVentilatoare;i++)
+		for (int i = 0; i < nrVentilatoare; i++)
 		{
 			this->vitezeVentilatoare[i] = 150;
 		}
 	}
 
-	CalculatorGaming(bool iluminareRGB, int nrVentilatoare, float temperaturaSuportata,int* vitezeVentilatoare) : Calculator()
+	CalculatorGaming(bool iluminareRGB, int nrVentilatoare, float temperaturaSuportata, int* vitezeVentilatoare) : Calculator()
 	{
 		this->iluminareRGB = iluminareRGB;
 		this->nrVentilatoare = nrVentilatoare;
@@ -1022,7 +1078,7 @@ public:
 
 	}
 
-	CalculatorGaming(bool iluminareRGB, int nrVentilatoare, float temperaturaSuportata, int* vitezeVentilatoare , string culoare, float pret, bool areInternet, int nrComponente, string* componente) :Calculator(199, culoare, pret, areInternet, nrComponente, componente)
+	CalculatorGaming(bool iluminareRGB, int nrVentilatoare, float temperaturaSuportata, int* vitezeVentilatoare, string culoare, float pret, bool areInternet, int nrComponente, string* componente) :Calculator(199, culoare, pret, areInternet, nrComponente, componente)
 	{
 		this->iluminareRGB = iluminareRGB;
 		this->nrVentilatoare = nrVentilatoare;
@@ -1033,7 +1089,7 @@ public:
 			this->vitezeVentilatoare[i] = vitezeVentilatoare[i];
 		}
 	}
-	
+
 	CalculatorGaming(const CalculatorGaming& cg) : Calculator(cg)
 	{
 		this->iluminareRGB = cg.iluminareRGB;
@@ -1046,7 +1102,7 @@ public:
 		}
 	}
 
-	 CalculatorGaming& operator=(const CalculatorGaming& cg)
+	CalculatorGaming& operator=(const CalculatorGaming& cg)
 	{
 		if (this != &cg)
 		{
@@ -1067,99 +1123,99 @@ public:
 		return *this;
 	}
 
-	 friend ostream& operator<<(ostream& out, const CalculatorGaming cg)
-	 {
-		 out << (Calculator)cg;
-		 out << endl;
-		 out << " Temperatura suportata este de " << cg.temperaturaSuportata << " grade" << endl;
-		 (cg.iluminareRGB == true) ? (out << " Este iluminat RGB, ") : (out << "Nu este iluminat RGB, ");
-		 out << " contine " << cg.nrVentilatoare << " ventilatoare, acestea avand vitezele de: "<<endl;
-		 for (int i = 0; i < cg.nrVentilatoare; i++)
-		 {
-			 out << i + 1 << ". " << cg.vitezeVentilatoare[i] <<" RPM " << endl;
-		 }
+	friend ostream& operator<<(ostream& out, const CalculatorGaming cg)
+	{
+		out << (Calculator)cg;
+		out << endl;
+		out << " Temperatura suportata este de " << cg.temperaturaSuportata << " grade" << endl;
+		(cg.iluminareRGB == true) ? (out << " Este iluminat RGB, ") : (out << "Nu este iluminat RGB, ");
+		out << " contine " << cg.nrVentilatoare << " ventilatoare, acestea avand vitezele de: " << endl;
+		for (int i = 0; i < cg.nrVentilatoare; i++)
+		{
+			out << i + 1 << ". " << cg.vitezeVentilatoare[i] << " RPM " << endl;
+		}
 
-		 return out;
+		return out;
 
-	 }
+	}
 
-	 friend istream& operator>>(istream& in, CalculatorGaming& cg)
-	 {
-		 in >> (Calculator&)cg;
-		 cout << " Are iluminare RGB? (0-nu / 1-da) : ";
-		 in >> cg.iluminareRGB;
-		 cout << " Temperatura suportata : ";
-		 in >> cg.temperaturaSuportata;
-		 cout << " Nr ventialtoare : ";
-		 in >> cg.nrVentilatoare;
-		 if (cg.vitezeVentilatoare != NULL)
-		 {
-			 delete[]cg.vitezeVentilatoare;
-			 cg.vitezeVentilatoare = new int[cg.nrVentilatoare];
-			 for (int i = 0; i < cg.nrVentilatoare; i++)
-			 {
-				 cout << " Viteza ventilator " << i + 1 << " : ";
-				 in>>cg.vitezeVentilatoare[i];
-			 }
-		 }
+	friend istream& operator>>(istream& in, CalculatorGaming& cg)
+	{
+		in >> (Calculator&)cg;
+		cout << " Are iluminare RGB? (0-nu / 1-da) : ";
+		in >> cg.iluminareRGB;
+		cout << " Temperatura suportata : ";
+		in >> cg.temperaturaSuportata;
+		cout << " Nr ventialtoare : ";
+		in >> cg.nrVentilatoare;
+		if (cg.vitezeVentilatoare != NULL)
+		{
+			delete[]cg.vitezeVentilatoare;
+			cg.vitezeVentilatoare = new int[cg.nrVentilatoare];
+			for (int i = 0; i < cg.nrVentilatoare; i++)
+			{
+				cout << " Viteza ventilator " << i + 1 << " : ";
+				in >> cg.vitezeVentilatoare[i];
+			}
+		}
 
-		 return in;
-	 }
-	 ~CalculatorGaming()
-	 {
-		 delete[]this->vitezeVentilatoare;
-	 }
+		return in;
+	}
+	~CalculatorGaming()
+	{
+		delete[]this->vitezeVentilatoare;
+	}
 
-	 bool getIluminareRGB()
-	 {
-		 return this->iluminareRGB;
-	 }
+	bool getIluminareRGB()
+	{
+		return this->iluminareRGB;
+	}
 
-	 void setIluminareRGB(bool iluminareRGB)
-	 {		
-		 this->iluminareRGB = iluminareRGB;
-	 }
+	void setIluminareRGB(bool iluminareRGB)
+	{
+		this->iluminareRGB = iluminareRGB;
+	}
 
-	 int getNrVentilatoare()
-	 {	
-		 return this->nrVentilatoare;
-	 }
+	int getNrVentilatoare()
+	{
+		return this->nrVentilatoare;
+	}
 
-	 int* getVitezeVentilatoare()
-	 {	
-		 return this->vitezeVentilatoare;
-	 }
+	int* getVitezeVentilatoare()
+	{
+		return this->vitezeVentilatoare;
+	}
 
-	 void setVentilatoare(int nrVentilatoare, int* vitezeVentilatoare)
-	 {
-		 if (nrVentilatoare > 0)
-		 {
-			 this->nrVentilatoare = nrVentilatoare;
-			 if (this->vitezeVentilatoare != NULL)
-			 {
-				 delete[]this->vitezeVentilatoare;
-				 this->vitezeVentilatoare = new int[nrVentilatoare];
-				 for (int i = 0; i < nrVentilatoare; i++)
-				 {
-					 this->vitezeVentilatoare[i] = vitezeVentilatoare[i];
-				 }
-			 }
-		 }
-	 }
+	void setVentilatoare(int nrVentilatoare, int* vitezeVentilatoare)
+	{
+		if (nrVentilatoare > 0)
+		{
+			this->nrVentilatoare = nrVentilatoare;
+			if (this->vitezeVentilatoare != NULL)
+			{
+				delete[]this->vitezeVentilatoare;
+				this->vitezeVentilatoare = new int[nrVentilatoare];
+				for (int i = 0; i < nrVentilatoare; i++)
+				{
+					this->vitezeVentilatoare[i] = vitezeVentilatoare[i];
+				}
+			}
+		}
+	}
 
-	 float getTemperaturaSuportata()
-	 {
-		 return this->temperaturaSuportata;
-	 }
-	 void setTemperaturaSuportata(float temperaturaSuportata)
-	 {
-		 this->temperaturaSuportata = temperaturaSuportata;
-	 }
+	float getTemperaturaSuportata()
+	{
+		return this->temperaturaSuportata;
+	}
+	void setTemperaturaSuportata(float temperaturaSuportata)
+	{
+		this->temperaturaSuportata = temperaturaSuportata;
+	}
 
-	 void metoda()
-	 {
-		 cout << "Acesta este un calculator de gaming";
-	 }
+	void metoda()
+	{
+		cout << "Acesta este un calculator de gaming";
+	}
 
 
 };
@@ -1173,6 +1229,10 @@ private:
 	int nrPrograme;
 	Program* programe;
 	bool esteIncepator;
+
+
+	DispozitivElectronic* *calculatorDE;
+	Actualizabil* *programeAC;
 
 public:
 	Programator()
@@ -1191,7 +1251,33 @@ public:
 
 		this->nrProgramatori++;
 
+
+		this->calculatorDE = new DispozitivElectronic* [1];
+		calculatorDE[0] = new Calculator();
+		this->programeAC = new Actualizabil * [3];
+		for (int i = 0; i < 3; i++)
+		{
+			programeAC[i] = new Program();
+		}
+
 	}
+
+	Actualizabil*& operator[](int index)
+	{
+		if (index >= 0 && index < 3)
+		{
+			return this->programeAC[index];
+		}
+	}
+
+	DispozitivElectronic*& intoarceDE(int index)
+	{
+		if (index ==0)
+		{
+			return this->calculatorDE[index];
+		}
+	}
+
 	Programator(string nume, bool esteIncepator, Calculator& c, int nrPrograme, Program* programe)
 	{
 		this->nume = nume;
@@ -1535,6 +1621,16 @@ private:
 	string* dispozitiveTestate;
 public:
 
+	void verificaActualizari()
+	{
+		cout << "Se verifica daca aplicatia mobila necesita actualziari...";
+	}
+
+	void aplicaActualizari()
+	{
+		cout << " Actualizari au fost aplicate cu succes aplicatiei mobile!";
+	}
+
 	AplicatieMobil() : Program("Default Mobile-App", 100)
 	{
 		this->sistemOperare = " Android";
@@ -1543,7 +1639,7 @@ public:
 		this->dispozitiveTestate = NULL;
 	}
 
-	AplicatieMobil(string nume, string sistemOperare, int numarDescarcari, float dimensiuneDescarcare,string* dispozitiveTestate) : Program(nume,dimensiuneDescarcare)
+	AplicatieMobil(string nume, string sistemOperare, int numarDescarcari, float dimensiuneDescarcare, string* dispozitiveTestate) : Program(nume, dimensiuneDescarcare)
 	{
 		this->sistemOperare = sistemOperare;
 		this->numarDescarcari = numarDescarcari;
@@ -1584,16 +1680,16 @@ public:
 			{
 				delete[]this->dispozitiveTestate;
 			}
-				this->dispozitiveTestate = new string[am.numarDescarcari];
-				for (int i = 0; i < am.numarDescarcari; i++)
-				{
-					this->dispozitiveTestate[i] = am.dispozitiveTestate[i];
-				}
-			
+			this->dispozitiveTestate = new string[am.numarDescarcari];
+			for (int i = 0; i < am.numarDescarcari; i++)
+			{
+				this->dispozitiveTestate[i] = am.dispozitiveTestate[i];
+			}
+
 		}
 		return *this;
 	}
-	
+
 
 	string getSistemOperare()
 	{
@@ -1642,16 +1738,16 @@ public:
 	}
 
 
-	
+
 	friend ostream& operator<<(ostream& out, AplicatieMobil am)
 	{
 		out << (Program)am;
 		out << endl;
 		out << " De asemenea, prezinta sistemul de operare " << am.sistemOperare << " , " << am.numarDescarcari << " descarcari." << endl;
-		out << " Are dimensiunea descarcarii de " << am.dimensiuneDescarcare << " MB, iar dispozitivele pe care a fost testata aplicatia sunt: "<<endl;
+		out << " Are dimensiunea descarcarii de " << am.dimensiuneDescarcare << " MB, iar dispozitivele pe care a fost testata aplicatia sunt: " << endl;
 		for (int i = 0; i < am.numarDescarcari; i++)
 		{
-			out << "Dispozitivul " << i + 1 << " : " << am.dispozitiveTestate[i]<<endl;
+			out << "Dispozitivul " << i + 1 << " : " << am.dispozitiveTestate[i] << endl;
 		}
 		return out;
 	}
@@ -1669,17 +1765,17 @@ public:
 		{
 			delete[]am.dispozitiveTestate;
 		}
-			am.dispozitiveTestate = new string[am.numarDescarcari];
-			for (int i = 0; i < am.numarDescarcari; i++)
-			{
-				cout << "Dispozitivul " << i + 1 << " : "; 
-				in >> am.dispozitiveTestate[i];
-			}
-		
+		am.dispozitiveTestate = new string[am.numarDescarcari];
+		for (int i = 0; i < am.numarDescarcari; i++)
+		{
+			cout << "Dispozitivul " << i + 1 << " : ";
+			in >> am.dispozitiveTestate[i];
+		}
+
 		return in;
 	}
 
-	void metoda() 
+	void metoda()
 	{
 		cout << " Aceasta este o aplicatie pentru telefon";
 	}
@@ -2210,5 +2306,72 @@ int main()
 
 	//Calculator* calculatorp = new CalculatorGaming();
 	//calculatorp->metoda();*/
+
+
+//faza 8
+
+//DispozitivElectronic** de = new DispozitivElectronic* [5];
+//de[0] = new Calculator();
+//de[1] = new CalculatorGaming();
+//de[2] = new Calculator();
+//de[3] = new CalculatorGaming();
+//de[4] = new Calculator();
+//
+//for (int i = 0; i < 5; i++)
+//{
+//	cout << endl;
+//	de[i]->porneste();
+//	cout << endl;
+//}
+//
+//cout << endl;
+//
+//Actualizabil** ac = new Actualizabil * [5];
+//ac[0] = new Program();
+//ac[1] = new AplicatieMobil();
+//ac[2] = new Program();
+//ac[3] = new AplicatieMobil();
+//ac[4] = new Program();
+//
+//for (int i = 0; i < 5; i++)
+//{
+//	cout << endl;
+//	ac[i]->verificaActualizari();
+//	cout << endl;
+//}
+//
+//Programator prg100;
+//prg100[0] = new Program();
+//prg100[1] = new AplicatieMobil();
+//prg100[2] = new Program();
+//
+//prg100.intoarceDE(0) = new CalculatorGaming();
+//
+//for (int i = 0; i < 3; i++)
+//{
+//	cout << endl;
+//	prg100[i]->aplicaActualizari();
+//	cout << endl;
+//}
+//cout << endl;
+//prg100.intoarceDE(0)->porneste();
+
+
+
+
+
+
+
+
+
+////toate stergerile de alocari dinamice
+//delete[]limbajefolosite;
+//delete[]departamente;
+//delete[]componente;
+//delete[]departamente1;
+//delete[]limbaje1;
+//delete[]programe;
+//delete[]componente1;
+//delete[]programeNoi;
 
 }
