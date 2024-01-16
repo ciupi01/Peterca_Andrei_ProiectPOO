@@ -1,10 +1,7 @@
 //PETERCA ANDREI GRUPA 1049
 //PROGRAM, ANTIVIRUS, CALCULATOR
 
-//Imi cer scuze pentru incarcarile tarzii ale catorva faze din proiect.
-//--
-// Proasta gestiune a timpului m-a impiedicat din a le posta la timp. Am incercat sa le postez cat mai rapid cu putinta.
-//--
+
 //Pentru implementarea fazei 8 in clasa "has-a". Pentru clasa mea,
 //  "Programator" am incercat sa pastrez ideea originala . "Programatorul are UN SINGUR calculator si MAI MULTE programe."
 
@@ -691,7 +688,7 @@ public:
 	virtual void opreste() = 0;
 };
 
-class Calculator:public DispozitivElectronic
+class Calculator :public DispozitivElectronic
 {
 private:
 	const int id;
@@ -1011,10 +1008,10 @@ ostream& operator<<(ostream& out, const Calculator c)
 	out << " ,are driverele instalate aferente anului "; out << c.driver;
 	cout << " , are pretul de ";
 	out << c.pret;
-	(c.areInternet == 1) ? (cout << " ,RON, prezinta conexiune la internet ") : (cout << " RON, nu prezinta conexiune la internet ");
-	cout << "  iar cele ";
+	(c.areInternet == 1) ? (cout << " RON, prezinta conexiune la internet ") : (cout << " RON, nu prezinta conexiune la internet ");
+	cout << " iar cele ";
 	out << c.nrComponente;
-	cout << "  componente sunt: ";
+	cout << " componente sunt: ";
 	if (c.nrComponente == 0)
 	{
 		cout << " - ";
@@ -1231,8 +1228,8 @@ private:
 	bool esteIncepator;
 
 
-	DispozitivElectronic* *calculatorDE;
-	Actualizabil* *programeAC;
+	/*DispozitivElectronic** calculatorDE;
+	Actualizabil** programeAC;*/
 
 public:
 	Programator()
@@ -1252,17 +1249,17 @@ public:
 		this->nrProgramatori++;
 
 
-		this->calculatorDE = new DispozitivElectronic* [1];
+		/*this->calculatorDE = new DispozitivElectronic * [1];
 		calculatorDE[0] = new Calculator();
 		this->programeAC = new Actualizabil * [3];
 		for (int i = 0; i < 3; i++)
 		{
 			programeAC[i] = new Program();
-		}
+		}*/
 
 	}
 
-	Actualizabil*& operator[](int index)
+	/*Actualizabil*& operator[](int index)
 	{
 		if (index >= 0 && index < 3)
 		{
@@ -1272,11 +1269,11 @@ public:
 
 	DispozitivElectronic*& intoarceDE(int index)
 	{
-		if (index ==0)
+		if (index == 0)
 		{
 			return this->calculatorDE[index];
 		}
-	}
+	}*/
 
 	Programator(string nume, bool esteIncepator, Calculator& c, int nrPrograme, Program* programe)
 	{
@@ -1508,7 +1505,7 @@ public:
 	{
 		out << "Programatorul cu numele " << p.nume << " detine urmatorul calculator : " << endl << endl;
 		out << p.calculator << endl;
-		(p.esteIncepator == true) ? (out << "De asemenea, el este incepator ") : (out << "De asemenea, el nu este incepator ");
+		(p.esteIncepator == true) ? (out << "De asemenea, el este incepator si ") : (out << "De asemenea, el nu este incepator si ");
 		out << " este cunoscator de " << p.nrPrograme << " programe, acestea fiind " << endl;
 		for (int i = 0; i < p.nrPrograme; i++)
 		{
@@ -1601,11 +1598,12 @@ ofstream& operator<<(ofstream& fout, Programator& p)
 	}
 
 
-	fout << endl << p.getNrPrograme() << " ";
+	fout << endl << p.getNrPrograme() << endl;
 	for (int i = 0; i < p.getNrPrograme(); i++)
 	{
 
 		fout << p.getPrograme()[i];
+		fout << endl;
 
 	}
 	return fout;
@@ -1782,7 +1780,7 @@ public:
 
 };
 int main()
-{
+{	
 	/*Program program1;
 	program1.afisare();
 
@@ -2177,66 +2175,67 @@ int main()
 		//faza 6
 
 
-///*string* limbaje = new string[2]{ " Java " , " C# " };
-//Program p10(10, "Gephy", 199, 2, limbaje);
+	///*string* limbaje = new string[2]{ " Java " , " C# " };
+	//Program p10(10, "Gephy", 199, 2, limbaje);
 
-//ofstream fisout("fis.txt", ios::out);
-//fisout << p10;
-//fisout.close();
+	//ofstream fisout("fis.txt", ios::out);
+	//fisout << p10;
+	//fisout.close();
 
-//ifstream fisin("fis.txt", ios::in);
-//Program p11;
-//fisin >> p11;
-//cout << p11;
-//fisin.close();
+	//ifstream fisin("fis.txt", ios::in);
+	//Program p11;
+	//fisin >> p11;
+	//cout << p11;
+	//fisin.close();
 
-//
+	//
 
-//ofstream fisout("fis2.txt", ios::out);
-//string* componente = new string[3]{ "Ecran","Monitor","Sursa" };
-//Calculator c10(10, "Rosu", 1965, true, 3, componente);
-//fisout << c10;
-//fisout.close();
+	//ofstream fisout("fis2.txt", ios::out);
+	//string* componente = new string[3]{ "Ecran","Monitor","Sursa" };
+	//Calculator c10(10, "Rosu", 1965, true, 3, componente);
+	//fisout << c10;
+	//fisout.close();
 
-//ifstream fisin("fis2.txt", ios::in);
-//Calculator c11;
-//fisin >> c11;
-//cout << c11;*/
+	//ifstream fisin("fis2.txt", ios::in);
+	//Calculator c11;
+	//fisin >> c11;
+	//cout << c11;*/
 
-///*string* componente = new string[4]{ "Placa_Video","RAM","Proc_Intel","Placa_sunet" };
-//Calculator c1(16, "Roz", 15000, true, 4, componente);
-//string* limbaje = new string[2]{ "C++", "C#"};
-//Program* programe = new Program[2];
-//cin >> programe[0];
-//cin >> programe[1];
+	///*string* componente = new string[4]{ "Placa_Video","RAM","Proc_Intel","Placa_sunet" };
+	//Calculator c1(16, "Roz", 15000, true, 4, componente);
+	//string* limbaje = new string[2]{ "C++", "C#"};
+	//Program* programe = new Program[2];
+	//cin >> programe[0];
+	//cin >> programe[1];
 
-//Programator pr10("Andrei", true, c1, 2, programe);
-//ofstream fisout("fis3.txt", ios::out);
-//fisout << pr10;
-//fisout.close();*/
-//
+	//Programator pr10("Andrei", true, c1, 2, programe);
+	//ofstream fisout("fis3.txt", ios::out);
+	//fisout << pr10;
+	//fisout.close();*/
+	//
 
-///*Programator pr11;
-//ifstream fisin("fis3.txt", ios::in);
-//fisin >> pr11;
-//cout << pr11;*/
+	///*Programator pr11;
+	//ifstream fisin("fis3.txt", ios::in);
+	//fisin >> pr11;
+	//cout << pr11;*/
 
-///*string* limbaje = new string[3]{ "C++", "C#","Python"};
-//Program p5(10, "Trojan", 345, 3, limbaje);
-//p5.scrieFisBinar("fis4.bin");
-//Program p6;
-//p6.citesteFisBinar("fis4.bin");
-//cout << p6;*/
+	///*string* limbaje = new string[3]{ "C++", "C#","Python"};
+	//Program p5(10, "Trojan", 345, 3, limbaje);
+	//p5.scrieFisBinar("fis4.bin");
+	//Program p6;
+	//p6.citesteFisBinar("fis4.bin");
+	//cout << p6;*/
 
-///*string* departamente = new string[2]{ "Logistica","Front_End" };
-//Antivirus a10(10, "Hero", 11.5, true, 2, departamente);
-//a10.scrieFisBinar("fis5.bin");*/
+	///*string* departamente = new string[2]{ "Logistica","Front_End" };
+	//Antivirus a10(10, "Hero", 11.5, true, 2, departamente);
+	//a10.scrieFisBinar("fis5.bin");*/
 
 
-///*Antivirus a5;
-//a5.citesteFisBinar("fis5.bin");
-//cout << a5;*/
+	///*Antivirus a5;
+	//a5.citesteFisBinar("fis5.bin");
+	//cout << a5;*/
 
+	
 
 	//faza 7
 	///*int* vitezeVentilatoare = new int[3] {123, 321, 666};
@@ -2355,6 +2354,72 @@ int main()
 //}
 //cout << endl;
 //prg100.intoarceDE(0)->porneste();
+
+
+
+
+
+
+
+/*string* limbaje = new string[2]{ " Java " , " C# " };
+Program p10(10, "Gephy", 199, 2, limbaje);
+
+ofstream fisout("fis.txt", ios::out);
+fisout << p10;
+fisout.close();
+
+ifstream fisin("fis.txt", ios::in);
+Program p11;
+fisin >> p11;
+cout << p11;
+fisin.close();*/
+
+
+
+/*ofstream fisout("fis2.txt", ios::out);
+string* componente = new string[3]{ "Ecran","Monitor","Sursa" };
+Calculator c10(10, "Rosu", 1965, true, 3, componente);
+fisout << c10;
+fisout.close();
+
+ifstream fisin("fis2.txt", ios::in);
+Calculator c11;
+fisin >> c11;
+cout << c11;*/
+
+
+string* componente = new string[4]{ "Ventilator","RAM","Procesor","Sursa" };
+Calculator c1(16, "Roz", 15000, true, 4, componente);
+string* limbaje1 = new string[2]{ "C++", "C#" };
+string* limbaje2 = new string[2]{ " Java " , " Pitonul " };
+Program p10(10, "Gephy", 199, 2, limbaje1);
+Program p11(15, "Poppy", 250, 2, limbaje2);
+
+Program* programe = new Program[2];
+programe[0]=p10;
+programe[1]=p11;
+
+
+Programator pr10("Andrei", true, c1, 2, programe);
+ofstream fisout("Petre.txt", ios::out);
+fisout << pr10;
+fisout.close();
+
+
+Programator pr11;
+ifstream fisin("Petre.txt", ios::in);
+fisin >> pr11;
+cout << pr11;
+
+
+
+delete[]componente;
+delete[]limbaje1;
+delete[]limbaje2;
+delete[]programe;
+
+
+
 
 
 
