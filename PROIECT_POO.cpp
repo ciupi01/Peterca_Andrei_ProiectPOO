@@ -1,10 +1,9 @@
-//PETERCA ANDREI GRUPA 1049
+//Peterca Andrei,Proiect POO - prelucrarea diferitelor clase aplicand concepte de programare orientata pe obiecte
 //PROGRAM, ANTIVIRUS, CALCULATOR
 
 
-//Pentru implementarea fazei 8 in clasa "has-a". Pentru clasa mea,
-//  "Programator" am incercat sa pastrez ideea originala . "Programatorul are UN SINGUR calculator si MAI MULTE programe."
-
+//Implementare concepte elementare ale Programarii Orientate pe Obiecte:Constructori,Destructori,Supraincarcari de operatori diversi,
+//clase abstracte, metode de prelucrare sau calcul diferite,concepte de late si early binding, relatie de is-a si has-a
 #include<iostream>
 #include<string>
 #include<fstream>
